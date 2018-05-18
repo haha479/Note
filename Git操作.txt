@@ -1,0 +1,128 @@
+﻿git add .
+	将当前文件夹下的所有文件添加到暂存区
+
+git commit -m '提交说明'
+	将暂存区的所有内容提交到当前分支
+
+git remote add origin '远程仓库地址'
+	本地仓库与远程仓库连接
+
+git push origin master
+	将本地仓库分支代码同步到远程仓库分支master
+
+
+提交
+	git log 
+		查看最近三次提交
+
+	git log --pretty=oneline | git reflog
+		查看commit id
+
+	git reset --hard HEAD~2
+		回滚到上两次前提交的版本
+
+	git reset --hard commit id	
+		回滚到某次提交的版本(使用commit id)
+
+	git checkout -- file.txt
+		把file.txt文件在工作区的修改全部撤销
+		(让这个文件回到最近一次git commit或git add时的状态)
+
+远程
+
+	git remote -v
+		查看远程库信息
+	git pull origin 分支名
+		拉去远程更新到本地分支
+	git push origin master
+		将本地master分支推送到远程库对应分支
+	git rm -r --cached '路径'
+		删除远程仓库下的某目录或文件
+
+分支
+	git branch 分支
+		创建分支
+
+	git checkout 分支
+		切换分支
+
+	git checkout -b 分支
+		创建并切换分支
+
+	git merge 分支1
+		将分支1的工作成果合并到当前分支上
+
+	git merge --no-ff -m 'commit描述' 分支1
+		合并分支1并且禁用Fast forward模式, 这样就能看到历史合并
+
+	git log -grapg
+		查看分支合并图
+
+	git branch -d 分支
+		删除分支
+
+	git branch -D 分支
+		强制删除一个没有合并过的分支
+
+标签(v0.9,v1.0是标签名)
+	git tag v1.0
+		打一个新标签
+	
+	git show v1.0
+		查看标签信息
+	
+	git tag
+		查看所有标签
+
+	git tag -d v0.1
+		删除标签
+
+	git push origin v1.0
+		推送标签到远程
+
+	git push origin --tags
+		一次性推送全部尚未推送到远程的本地标签
+
+	git tag v0.9 commit_id
+		对某次提交打标签
+
+	如果标签已经推送到远程, 要删除远程标签
+	, 先从本地删除 , 然后从远程删除
+	git tag -d v0.9
+	git push origin :refs/tags/v0.9
+
+储藏去stash
+	git stash
+		将当前工作储藏起来
+
+	git stash list
+		查看stash内容
+
+	git stash apply stash@{0}
+		可以多次stash, 恢复的时候, 先用git stash list查看, 然后恢复指定的stash
+
+	git stash apply
+		恢复储藏的工作, 但是stash内容呢并不会删除
+
+	git stash drop
+		删除stash内容
+
+	git stash pop
+		恢复储藏的工作并且删除stash内容
+
+git reset HEAD file.txt
+	把暂存区的修改(add)撤销掉
+
+ssh-keygen -t rsa -C "gitmail"
+	创建SSH Key
+
+开发中的问题
+	首先，可以试图用git push origin branch-name推送自己的修改；
+
+	如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并(或者git pull --rebase origin master)；
+
+	如果合并有冲突，则解决冲突，并在本地提交；
+
+	没有冲突或者解决掉冲突后，再用git push origin branch-name推送就能成功
+	如果git pull提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，
+	用命令git branch --set-upstream branch-name origin/branch-name

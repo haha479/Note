@@ -1,0 +1,178 @@
+MySQL 
+引擎
+	查看提供的引擎:
+		show engines
+	查看当前默认的存储引擎:
+		show variables like '%storage_engine%'
+	创建表时最后可以自定义使用引擎 : engine=引擎
+	修改指定表使用的引擎 :
+		alter table table_name engine = 引擎;
+	查看当前数据库内表使用的引擎
+		show table status from database;
+MySQL常见的引擎
+	Innodb , 支持事务, 支持行级锁,表级锁和索引, 而行级锁需要靠索引实现
+	MyIASM , 默认引擎, 不支持行级锁,外键和事务, 支持索引
+
+事务 :
+	开启事务
+		start transaction
+	回滚(撤销开启事务后执行的操作)
+		callback
+	提交事务中的命令
+		commit
+锁 :
+	行级锁
+		使用的引擎 : Innodb
+		*** 只有通过索引条件检索数据, Innodb才使用行级锁, 否则将会使用表级锁
+		锁定表中的一行, 锁定的颗粒度最小, 但开销大, 发生锁冲突的概率最低
+		用于高并发情况较好
+	表级锁
+		使用的引擎 : MyIsam
+		锁定整个表 , 锁定的颗粒度大, 开销小, 发生锁冲突的概率高,并发度低
+
+	查看表级锁情况
+		show status like 'table%' ;
+		Table_locks_immediate : 产生表级锁定的次数
+		Table_locks_waited : 出现表级锁定争用而发生等待的次数 
+		如果Table_licks_waited的值较高, 说明表有教严重的表级锁争用情况
+
+索引 :
+	索引的类型 : 单列表名索引(主键索引, 唯一索引, 普通索引)和组合索引
+	创建普通索引
+		alter table table_name add index index_name(列名)
+		或 create index index_name on table_name(列名)
+	创建唯一索引
+		alter table table_name add unique(列名)
+		或 create unique index 索引名 on '表名'('字段名')
+	创建组合索引(一个索引包含多个列)
+		alter table table_name add index index_name(列名1, 列名2, ..)
+		create index 索引名称 on '表名'('字段名1','字段名2', ..)
+
+创建用户并且赋予权限:
+	grant all privileges on *.* to 'root'@'%' identified by 'mysql' with grant option;
+		上面 用户名 : root 密码 : mysql 需要引号
+查看mysql中的用户
+	进入mysql数据库 select user,host from user (查看user表中的用户数据)
+
+刷新命令 :
+	flush privileges;
+
+重启mysql :
+	service mysql restart
+
+将数据库备份 :
+	mysqldump –uroot –p 数据库名 > ~/Desktop/备份文件.sql;
+	将指定的数据库备份到 ~目录下的 Desktop目录下的 备份文件.sql
+
+恢复数据 :
+	mysql -uroot –p 数据库名 < ~/Desktop/备份文件.sql
+	##注意 : 事先要先创建好数据库用于恢复
+
+python操作mysql的宏观架构
+	1. 建立和数据库系统的连接
+	2. 获取操作游标
+	3. 执行SQL，创建一个数据库（当然这一步不是必需的，因为我们可以用已经存在的数据库）
+	4. 选择数据库
+	5. 进行各种数据库操作
+	6. 操作完毕后，提交事务（这一步很重要，因为只有提交事务后，数据才能真正写进数据库）
+	7. 关闭操作游标
+	8. 关闭数据库连接
+
+数据库 :
+	创建数据库
+		create database 数据库名 charset=utf8
+	删除数据库 
+		drop database 数据库名
+	切换数据库
+		use 数据库名
+	查看当前选择的数据库
+		select database();
+表 :
+	查看当前数据库中所有表
+		show tables;
+	创建表
+		auto_increment:表示自动增长 , primary key 表示主键
+		create table 表名(
+			id int auto_increment primary key ,
+			name varchar(10) not null
+			)type=引擎;
+
+	修改表
+		alter table 表名 add|change|drop 列名 类型;
+		例如 : alter table students add birthday datetime;
+	
+	查看表结构
+		desc 表名;
+	
+	删除表 
+		drop table 表名;
+	
+	更改表名称
+		rename table 原表名 to 新表名;
+	
+	查看表的创建语句
+		show create table "表名";
+
+数据操作
+	往表中添加一列
+		alter table 表名 add column 列名 varchar(20) not null
+	
+	往表中插入一个字段
+		update 表名 set 列名=xx where 条件
+
+	查询表中数据
+		select * from 表名（后面的*号表示查看表中的所有列,也可以指定）
+	
+	取别名查询
+		例 : select id as k,name as j from 表名;
+	
+	消除重复行 (在select后面列前使用distinct可以消除重复行)
+		例 : select distinct gender from 表名
+
+	条件查询  （条件 : 例如 id = 1 name = 张三）
+		select * from 表名 where 条件
+	
+	
+
+	全列插入数据
+		insert into 表名 values(..)
+	缺省插入
+		insert into 表名(列1,..) values(值1,...)
+	同时插入
+		...
+
+	聚合
+		为了快速得到统计数据,定义了5个聚合函数
+			count(*) 计算总行数
+			max(id)  此列id最大值
+			min(id)  此列id最小值
+			sum(id)  求此列的和
+			avg(id)  求此列id平均值
+	分组
+		按照字段分组，表示此字段相同的数据会被放到一个组中
+			在表后面加  group by ..
+				例如 select count(*) from students group by gender 
+					(按照性别分组)
+			分组后筛选
+				例如 select count(*) from students group by gender having gender=1
+					(分组后把所有gender等于1的找出来)
+	排序
+		降序
+			在最后面加上order by id desc 
+		升序 
+			order by id asc
+	
+	分页
+		limit start,count  从start开始,获取count条数据（都是索引）
+		
+	
+
+
+
+
+
+
+
+
+
+		

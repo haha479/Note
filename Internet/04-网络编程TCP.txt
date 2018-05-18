@@ -1,0 +1,23 @@
+<broadcast>广播的所有网络IP
+如果是写192.168.16.255 等于是写死了IP，换个网段的话就不行了
+所以写<broadcast>更好
+
+listen :
+	函数内的参数是支持同时链接的客户端数
+
+
+decode 和 encode 的差别
+	
+	decode :
+		decode的作用是将其他编码的字符串转换成unicode编码
+	encode :
+		encode的作用是将unicode编码转换成其他编码的字符串
+
+
+总的来说网络程序是由两个部分组成的--客户端和服务器端.它们的建立步骤一般是:
+
+服务器端
+socket-->bind-->listen-->accept
+
+客户端
+socket-->connect

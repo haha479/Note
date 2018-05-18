@@ -1,0 +1,133 @@
+﻿mongodb  # test为集合
+安装mongo之后, 在没有安全认证的情况下创建root管理账户, 对应Admin数据库
+之后再将带有安全认证的mongo服务添加到电脑,然后使用root账户登录
+添加服务(带有安全认证) :
+	mongod.exe --logpath D:\mongodb\logs\mongodb.log --logappend --dbpath D:\mongodb\data --directoryperdb --serviceName MongoDB --auth --install
+
+添加mongo账户(含有安全验证,即没有账户则没有权限)
+	首先得确认使用的数据库是admin(ues admin)
+	
+	创建对指定数据库可读可写的普通用户
+	db.createUser(
+		{
+			user:"username",
+			pwd:"password",
+			roles:[{role:"readWrite",db:"允许管理的数据库"}]
+		}
+	)
+
+	创建root用户
+	db.createUser(
+		{
+			user:"username",
+			pwd:"password",
+			roles:[{role:"root",db:"admin"}]
+		}
+	)
+使用账号密码登陆
+	mongo -u 账户名 -p --authenticationDatabase 数据库
+
+连接远程数据库
+	mongo 远程主机IP:MongoDB端口号/数据库名 -u username -p password
+	
+mongodb数据类型
+	mongodb文档类似与json(bson), 但是在json的基础上扩展了几种类型
+	总的是 null, bool, 数字, 字符串, 数组, 对象, 日期类型, 整数, 浮点数
+
+创建数据库并使用
+	use 名
+
+查看所有非空数据库(没有集合则不显示)
+	show dbs
+
+创建集合并插入数据
+	db.集合.insert({name:'aag'})
+
+建立联合索引
+	db.test.ensureIndex({属性:1})     # 1表示升序, -1表示降序
+
+建立唯一索引
+	db.test.ensureIndex({属性:1},{"unique":true})
+
+查看所有索引
+	db.test.getIndexes()
+
+删除索引
+	db.test.dropIndexex('索引名')
+
+
+创建超级管理用户
+	use admin
+	db.createUser({
+		user:'admin',
+		pwd:'123',
+		roles:[{role:'root',db:'admin'}] # db:针对哪个数据库创建账户
+	})
+
+创建普通用户
+	db.createUser({
+		user:'user',
+		pwd:'123',
+		roles:[{role:'readWrite',db:test}]
+	})
+
+
+建立主从复制(从服务器会每隔一小段时间自动备份主服务器中的数据)
+	开启两个mongo服务器(无身份验证)
+		mongod --bind_ip IP --port PORT --dbpath D:\.. --replSet 名
+		...(从服务器)
+	客户端连接服务器
+		mongo --host IP --port PORT
+
+	在客户端中设置主(连接的哪个服务器, 就初始化哪个服务器)
+		rs.initiate()
+
+	添加副本集(添加从,在主中添加)
+		rs.add('HOST:PORT')
+		HOST : 从服务器地址
+		PORT : 从服务器端口
+	查看当前状态
+		rs.status()
+
+	在从服务器上进行读操作,需要设置rs.slaveOk
+		rs.slaveOk()
+
+	主从切换
+		主服务器挂了, 从服务器会自动成为主服务器,再启动主服务器时, 则成了从服务器
+
+
+手动备份数据库数据到指定文件(含安全认证)
+	mongodump -u 账户 -p passwd --authenticationDatabase 验证数据库名 -d dbname -o dir
+	-u 安全验证账户
+	-p 账户密码
+	-d 备份的数据库
+	-o 备份数据存放文件路径
+
+恢复(不需像mysql那样手动先创建数据库)
+	mongorestore -h dbhost -d dbname --dir dbdir
+	-h 服务器地址
+	-d 需要恢复的数据库
+	--dir 备份数据所在位置
+
+
+与python交互
+	建立连接并创建客户端
+		无安全认证	
+			client = MongoClient('mongodb://localhost:27017')
+		有安全认证
+			client = MongoClient('mongodb://用户名:密码@localhost:27017/数据库名称')
+
+	获得数据库
+		db = client.数据库
+
+	获取集合
+		jihe = db.集合
+
+	操作数据(跟mongo中操作类似,只是在python中是字典)
+		插入 :
+			jihe.insert({})
+		修改 :
+			jihe.update({条件},{})
+		删除文档
+			jihe.remove({})
+	.....

@@ -1,0 +1,31 @@
+
+
+
+创建一个django项目:命令:django-admin startproject 项目名
+
+进入到项目并创建一个应用:命令:python manage.py startapp 应用名
+
+确保是使用的python2环境,file -- settings -- Project: -- Project Interpreter -- 更改环境
+
+将应用添加到项目中:在项目下的settings文件中找到INSTALLED_APPS,在最后面写入应用名
+
+在总的项目文件中创建一个模板,templates,在templates下创建一个目录,目录名跟应用同名,在该目录下则可以创建html文件,用于渲染网页
+
+要想使用模板还得在settings文件中找到TEMPLATES,找到DIRS，在列表中写入:os.path.join(BASE_DIR, 'templates')
+
+更改时区的方法:在settings文件中找到TIME_ZONE : 设置为 'Asia/Shanghai'
+
+将语言更改为中文: 在settings文件中找到LANGUAGE_CODE : 设置为 'zh-hans'
+
+设置url(路由): 在项目下找到url,这就是路由的配置地方,但是一般路由的配置是在应用下的urls,这个文件需要自己创建,
+
+创建一个子路由: 在应用下创建一个urls.py文件
+	
+让项目中的路由跟子路由联系起来: 在父路由中导入include,然后再新创建一个路由,url(两个参数),第一个参数是要跟网址做匹配的正则
+第二个参数: include('子路由的路径,一般是:应用.urls')
+
+然后配置子路由:跟父路由一样导入url模块,定义一个同名的列表 urlpatterns = [],列表中就可以写url()函数了,第一参数同上
+第二个参数则是视图函数,还得在子路由中导入views中的视图函数,视图函数在应用下的views.py中编写
+
+编写视图函数: 在views.py中定义函数,接收一个参数request,函数内返回一个response对象:return render()
+render中,第一个参数是request,第二个参数是要返回的模板路径(也就是html文件,应用名/模板名)

@@ -1,0 +1,90 @@
+﻿cookie和session的区别:
+
+1、cookie数据存放在客户的浏览器上，session数据放在服务器上。
+
+2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
+   考虑到安全应当使用session。
+
+3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
+   考虑到减轻服务器性能方面，应当使用COOKIE。
+
+4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
+
+5、所以个人建议：
+   将登陆信息等重要信息存放为SESSION
+   其他信息如果需要保留，可以放在COOKIE中
+
+cookie :
+	存储在浏览器中的一段文本信息
+
+	cookie返回给浏览器信息(键值对)	
+		set_cookie(key,value='',max_age=None,expires=None)
+			key , value都是字符串类型,
+			max_age 和 expires参数都是过期时间设置,二选一,不设置的话默认两个星期过期
+		response = HttpResponse() ,
+		response.set_cookie('t','tt')
+		return response
+
+	本网站的cookie不能在其他网站访问
+
+response的子类HttpResponseRedirect重定向
+	需要重定向的网页HttpResponseredirect('需要定向到的视图url')
+	一般直接使用 renturn redirect('需要定向到的视图url')
+
+无状态:
+	HTTP协议的特点,无法记录之前的状态,不会记得用户访问过什么页面,
+
+实现状态保持的两种方法:
+	session  cookie
+
+session:
+	session保存数据默认是保存到了数据库,所以使用之前还要迁移
+	session就是一个字典对象
+	
+	设置session数据存储的位置:
+		在settings文件中添加:
+			SESSION_ENGINE='django.contrib.sessions.backends.db' (默认的,存储在数据库)
+			本地缓存:
+				SESSION_ENGINE='django.contrib.sessions.backends.cache'
+			数据库和缓存同时使用:
+				SESSION_ENGINE='django.contrib.sessions.backends.cache_db'
+			redis:
+				SESSION_ENGINE = 'redis_sessions.session'
+				SESSION_REDIS_HOST = 'localhost'
+				SESSION_REDIS_PORT = 6379
+				SESSION_REDIS_DB = 0
+				SESSION_REDIS_PASSWORD = ''
+				SESSION_REDIS_PREFIX = 'session'
+	启用session:
+		setting文件中:
+			向INSTALLED_APPS列表中添加：
+			'django.contrib.sessions',
+
+			向MIDDLEWARE_CLASSES列表中添加：
+			'django.contrib.sessions.middleware.SessionMiddleware',
+			禁用这些会话可以节省性能消耗
+
+	使用session:
+		往session中写数据:
+			request.session['键']=值
+			以base64的编码存储在数据库django_session表中
+		根据键获取会话的值
+			request.session['键']
+			也可以request.session.get('键',默认值(不写为None)),拿不到数据会返回默认值
+		
+		判断session中是否有指定数据:键值		
+
+		清除所有会话
+			clear()
+		删除当前的会话数据并删除会话的cookie
+			flush()
+		删除会话
+			del request.session['键']
+		
+		设置会话过期时间:
+			set_expiry(value)
+			如果没有指定，则两个星期后过期
+			如果value是一个整数，会话将在values秒没有活动后过期
+			若果value是一个imedelta对象，会话将在当前时间加上这个指定的日期/时间过期
+			如果value为0，那么用户会话的Cookie将在用户的浏览器关闭时过期
+			如果value为None，那么会话永不过期

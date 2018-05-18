@@ -1,0 +1,39 @@
+¾²Ì¬ÎÄ¼þ
+	ÔÚ×ÜÏîÄ¿ÏÂ´´½¨Ò»¸östaticÄ¿Â¼,static£¬ÔÚ¸ÃÄ¿Â¼ÏÂ´´½¨Ò»¸öÓ¦ÓÃÍ¬ÃûµÄÎÄ¼þ¼Ð
+
+	STATIC_URL = '/Âß¼­ÏÔÊ¾Â·¾¶/'
+	STATICFILES_DIRS = [os.pthath.join(BASE_DIR, 'ÕæÊµ´ÅÅÌÂ·¾¶')]
+	Á½¸öÂ·¾¶Ò»°ã¶¼Ð´static	
+
+	Ä£°åÖÐ½âÎö¾²Ì¬Â·¾¶:
+		Èç¹û½«ÇëÇó¾²Ì¬ÎÄ¼þµÄÂ·¾¶Ð´ËÀ,ÔÙÐÞ¸ÄsettingsÎÄ¼þÖÐµÄstatic_urlºó¾Í²»ÄÜÆ¥Åä,Ò²¾Í²»»áÈ¥²éÑ¯ÎïÀíµØÖ·ÁË
+		¶¯Ì¬²éÕÒÂ·¾¶:src='{% static 'Ó¦ÓÃ/Â·¾¶' %}'
+		ºÃ´¦ÊÇ¸ù¾Ý¶¯Ì¬static_urlÀ´Éú³ÉÂ·¾¶,ÀàËÆ·´Ïò½âÎö,¸üÁé»î
+		ÒªÔÚÔÚµÚÒ»ÐÐ¼ÓÔØ¾²Ì¬ÎÄ¼þ
+			{% load static from staticfiles %}
+	
+ÖÐ¼ä¼þ
+	±¾ÖÊÊÇÒ»¸öpythonÀà,µ×²ãµÄ²å¼þÏµÍ³
+	
+	settingsÎÄ¼þÖÐµÄ MIDDLEWARE_CLASSES
+
+·ÖÒ³
+	´´½¨paginator¶ÔÏó
+		paginator = Paginator('Êý¾Ý',ÉèÖÃÒ»Ò³¶àÉÙ¸öÊý¾Ý)
+
+	´´½¨page¶ÔÏó
+		Paginator¶ÔÏóµÄpage()·½·¨·µ»ØPage¶ÔÏó
+			page = paginator.page(index) ÏÔÊ¾µÚindexÒ³
+
+		ÊôÐÔ : 
+			·µ»Øµ±Ç°Ò³µÄÊôÐÔ : number
+
+			×ÜÒ³Êý : page.paginator.page_range
+
+		ÔÚÉÏÏÂÎÄÖÐ·µ»Ø¸Ã¶ÔÏó page		
+		
+×Ô¹ØÁª
+	×Ô¼º¸ú×Ô¼º¹ØÁª
+		ÔÚÄ£ÐÍÀàÖÐ 
+			a = models.ForeignKey("self",null=True,blank=True)
+	

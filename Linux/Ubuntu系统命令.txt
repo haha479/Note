@@ -1,0 +1,30 @@
+﻿重启
+	sudo reboot
+查看ubuntu版本号
+	cat /etc/issue
+从图形界面切换到命令行界面
+	快捷键 : ALT + CTRL + F2
+	开机自动进入命令行界面
+		修改 : 将/etc/default/grub 下的 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"修改成GRUB_CMDLINE_LINUX_DEFAULT="quiet splash text", 然后更新grub : sudo update-grub
+
+从命令行切换到图形界面
+	快捷键 : ALT + CTRL + F7
+	命令 : sudo lightdm
+	开机自动进入图形化界面
+		修改 : 配置/etc/X11/default-display-manager 里面的内容为/usr/sbin/gdm(不行的话先使用sudo apt-get install gdm)
+
+相关服务命令
+	systemctl is-enabled servicename.service #查询服务是否开机启动
+	sudo sysv-rc-conf #查看开机运行服务
+	systemctl disable *.service #取消开机运行
+	service servicename start #启动服务
+	service servicename stop #停止服务
+	service servicename restart #重启服务
+	systemctl reload *.service #重新加载服务配置文件
+	systemctl status *.service #查询服务运行状态
+
+
+通过文件名和内容查找文件并输出(使用more log查看结果)
+	find -name '*' -exec grep "Register" {} \; -print 1>log 
+
+

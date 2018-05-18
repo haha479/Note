@@ -1,0 +1,111 @@
+﻿创建项目 
+	scrapy startproject 项目名
+
+创建spider爬虫
+	scrapy genspider 爬虫 爬取的域名
+
+创建crawlspider爬虫
+	scrapy genspider -t crawl 爬虫名 域名
+
+进入scrapy shell
+	scrapy shell url 可直接得到response响应文件
+	
+命令行运行项目
+	scrapy crawl 爬虫名(在爬虫文件类中定义的类属性)
+
+	项目中的__init__.py不能删
+
+运行并且导出到文件
+	csv --一种excel存储数据的文件格式
+
+	scrapy crawl 爬虫名 -o 文件名
+
+爬虫文件spider
+
+	发送第二次请求
+		yield scrapy.Request(url,callback=爬虫函数的引用)
+
+	将使用xpath匹配出来的结果转换成unicode字符串
+		xpath('').extract()
+	发送POST请求
+		yield scrapy.FormRequest(url,formdata,callback)
+
+items文件
+	存储数据的文件
+	在items中保存的字段都是字符串
+
+pipelines
+	管道文件
+
+	piplines中如果类继承的是object,方法中一定要有process_item,也必须return item
+
+	可以不写的 : 
+			__init__ : 初始化方法
+
+			open_spider : 当spider被开启时,被调用
+
+			close_spider : 当spider被关闭时,被调用
+
+	settings文件中设置使用管道文件中类的优先级,数字越小,优先级越高(一个管道文件中有多个类才有意义)
+		在settings文件中将ITEM_PIPELINES = {
+	   'tencent.pipelines.TencentPipeline': 300,
+		}取消注释
+
+settings文件
+	并发量 ：可以同时支持多少个爬虫运行,默认是16
+		CONCURRENT_REQUESTS = 32
+
+	设置下载延迟
+		在seetings文件中修改DOWNLOAD_DELAY的值,一般设置为2-5之间
+
+	禁用cooies : 在网站中不保留浏览的数据
+		COOKIES_ENABLED = False
+
+	请求报头
+		DEFAULT_REQUEST_HEADERS = {''}
+
+	爬虫中间件(了解)
+		SPIDER_MIDDLEWARES = {}
+
+	下载中间件
+		DOWNLOADER_MIDDLEWARES = {数值越小,优先级越高}
+
+	管道文件 : 决定下载后的文件怎么处理
+		ITEM_PIPELINES = {}
+
+	可以在settings文件中设置图片下载的路径
+
+	在settings文件中设置保存日志信息的文件名
+		LOG_FILE = "tencentlog.log"
+		# 保存日志等级,低于或等于此等级的信息都被保存
+		LOG_LEVEL = "INFO"
+在总的项目下创建一个start.py文件,在文件中写上
+	from scrapy import cmdlines
+	cmdlines.execute("scrapy crawl 爬虫名".split())
+
+指定保存内容的编码格式(万能钥匙)
+	import sys
+	reload(sys)
+	sys.setdefaultencoding("utf-8")
+
+
+window中python2遇到编码问题,最上面加上一行
+	#coding=cp936piplines中如果类继承的是object,方法中一定要有process_item,也必须return item
+
+	可以不写的 : 资料中看
+		爬虫结束时调用的方法
+
+linkextractor :
+	使用linkextractors
+	from scrapy.linkextractors import linkExtractor
+	
+	使用linkextractors解析response获取链接
+	# 创建一个正则匹配规则
+	link_list = LinkExtractor(allow=("正则"))
+	# 在response中匹配正则
+	link_list.extract_links(response)
+
+Rule规则中的process_links = "func" ，用来处理每个response里的链接,func需要一个参数来接收链接
+并且需要返回links链接列表
+
+

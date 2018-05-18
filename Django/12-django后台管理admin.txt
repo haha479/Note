@@ -1,0 +1,50 @@
+
+#admin网页中可以维护数据
+
+创建超级用户:
+	python manage.py createsuperuser
+	进入admin网页中会提示输入用户密码，输入后便可进入用户管理页面
+	在admin网页中可以直接管理数据,也可以自定义数据的显示方式
+
+注册用户:
+	在应用的admin中注册(将模型类添加到admin中)
+		导入models模快--> admin.site.register(models模块中的类名)
+
+运行项目后,可以在admin网页中,来查看用户,也会有表的数据,
+
+
+自定义管理页面(admin网页中)
+
+	在models中定义类,继承admin中的ModelAdmin，
+	并且在register注册的方法中的第二参数写上类名，表示遵循这个页面的改变
+	
+	列表页的显示:
+		类里写上例如
+			(字段排序): 
+				list_display = ['id','btitle','bpub_date']（按照自定义的方式排序显示）
+
+			过滤字段,出现在右边:  
+				list_filter = ['btitle']（按照btitle过滤）
+
+			搜索字段,出现在上方
+				search_fields = ['btitle']（按照btitle进行搜索）
+
+			分页
+				list_per_page = 2 
+
+			添加修改页
+				fieldsets = [
+					('base',{'fields':['btitle']}),
+					('super',{'fields':['bpub_date']})
+				]	
+
+关联注册:
+	在admin.py中新定义一个类,继承admin.StackedInline(也可以继承admin.TabularInline,显示的是表格形式的),
+	用来关联注册,图书跟作者,是一对多的关系(一本书可以由几个人写成)
+		model = HeroInfo  (表示关联model.py中的哪个类,)
+		extra = 2 (表示关联的个数)
+	嵌入(也可以嵌入多个)
+		在管理类(上面的管理网页显示)中写上
+			inlines = [HeroInfoInline]  (显示在网页中)
+	
+			

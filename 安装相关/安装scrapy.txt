@@ -1,0 +1,14 @@
+
+安装scrapy之前需要安装依赖包
+
+	parsel , w3lib , cryptography, pyOpenSSL , lxml , twisted
+	
+	twisted需要在网上下载whl文件,安装,其他都可用pip安装
+	
+	下载twisted需要的网址 : http://www.lfd.uci.edu/~gohlke/pythonlibs/，    
+运行scrapy项目还需要安装win32
+
+	 http://sourceforge.net/projects/pywin32/files/ 下载对应的系统和python版本	
+
+	
+	
