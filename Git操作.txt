@@ -36,9 +36,12 @@ git push origin master
 		拉去远程更新到本地分支
 	git push origin master
 		将本地master分支推送到远程库对应分支
-	git rm -r --cached '路径'
-		删除远程仓库下的某目录或文件
 
+	1. git rm -r --cached '路径' # 删除缓存文件, git rm --f '文件路径' -r # 删除物理文件
+	2. git commit 
+	3. git push
+		删除远程仓库下的某目录或文件
+	
 分支
 	git branch 分支
 		创建分支
