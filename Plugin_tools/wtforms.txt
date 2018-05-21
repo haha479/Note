@@ -1,0 +1,17 @@
+# 学习自 Github上项目: artcms_project
+
+集中化管理表单 :
+	wtforms
+
+flask中wtforms的使用:
+	form.py
+	0.在form文件中定义一个表单类
+	1.定义表单中的字段信息, 表单样式等, 不同的字段Field都可以导入(StringField, PasswordField, SubmitField等等)
+
+	views.py
+	0.在views文件中导入在form文件定义的表单类
+	1.在视图类中实例化表单类, 并在渲染模板时传入实例对象
+
+	template
+	0.在html模板中使用{{  }}定义表单
+
