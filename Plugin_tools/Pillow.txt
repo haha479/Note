@@ -1,0 +1,22 @@
+pillow一般用于绘图
+
+其下的包有 : Image, ImageDraw, ImageFont, ImageFilter
+
+Image: 用于创建一张空白的图片
+# 用法 
+	0. 创建对象
+	image = Image.new('图片背景色方式,例如:RGB', (宽, 高), (255,255,255))
+
+ImageDraw: 用于填充字符等
+# 用法
+	0. 创建Draw
+	draw = ImageDraw.Draw(传入图片)
+	1. 填充字符
+	draw.text((坐标x,y), 字符, font=字体, fill=颜色)
+	2. 填充像素点
+	draw.point((坐标x,y), fill=颜色)
+
+ImageFont: 字体对象
+# 用法
+	0. 创建字体对象
+	font = ImageFont.truetype(字体文件路径, 字体大小)
