@@ -1,3 +1,5 @@
+# 学习自Githun上项目: artcms_project
+
 pillow一般用于绘图
 
 其下的包有 : Image, ImageDraw, ImageFont, ImageFilter
