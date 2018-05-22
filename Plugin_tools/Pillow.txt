@@ -4,7 +4,7 @@ pillow一般用于绘图
 
 其下的包有 : Image, ImageDraw, ImageFont, ImageFilter
 
-Image: 用于创建一张空白的图片
+Image: 用于创建一张空白的图片, 也可打开一张图片(Image.open('路径'))
 # 用法 
 	0. 创建对象
 	image = Image.new('图片背景色方式,例如:RGB', (宽, 高), (255,255,255))
@@ -22,3 +22,10 @@ ImageFont: 字体对象
 # 用法
 	0. 创建字体对象
 	font = ImageFont.truetype(字体文件路径, 字体大小)
+
+ImageFilter: 模糊效果
+# 用法
+	0. 打开jpg图像文件
+	im = Image.open('test.jpg')
+	1. 应用模糊滤镜
+	im2 = im.filter(ImageFilter.BLUR)
