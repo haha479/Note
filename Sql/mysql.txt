@@ -132,8 +132,12 @@ python操作mysql的宏观架构
 	条件查询  （条件 : 例如 id = 1 name = 张三）
 		select * from 表名 where 条件
 	
-	
+	删除一行数据(根据条件删除)
+		delete from 表名 where id = 8
 
+	删除一列数据
+		alter table 表名 drop column 列名
+		
 	全列插入数据
 		insert into 表名 values(..)
 	缺省插入
