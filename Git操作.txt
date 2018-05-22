@@ -37,7 +37,9 @@
 		git log -p -2
 
 远程
-
+	强制推送
+		git push -u origin master -f
+ 
 	查看远程库信息
 		git remote -v
 		
