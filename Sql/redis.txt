@@ -12,3 +12,21 @@
 
 	watch 键 : 监控一个键, 如果在监控的过程中该键被修改或删除
 				,之后的事务中的操作都不会执行
+
+命令:
+	keys * 遍历并获得所有key
+	dbsize 返回键总数值
+	exists 检查key是否存在, 1,0
+	del key 删除任意值类型的key , 可一次性删除多个, 返回删除个数
+	get key 返回key对应的value
+
+	设置过期:
+		expire key s 多少秒后过期, 过期自动删除
+		pexpire key ms 多少毫秒后过期
+
+		expireat key timestamp 到达指定时间戳时过期(秒)
+		pexpireat key ms-timestamp 同上(毫秒)
+		
+		persist key 清除过期时间
+		ttl ket 查看key的剩余过期时间
+		
