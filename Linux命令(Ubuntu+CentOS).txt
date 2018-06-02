@@ -21,8 +21,8 @@
 	# 切换到命令行模式
 	ctrl+alt+F2
 
-系统最大打开文件描述符数L /proc/sys/fs/file-max
-	1. 查看: cat
+系统最大打开文件描述符数 
+	1. 查看: cat /proc/sys/fs/file-max
 	2. 设置
 		临时性  
 			echo 10000 > /proc/sys/fs/file-max  
@@ -38,9 +38,19 @@
 
 	# -exec 固定写法参数, {} 查找到的文件, \;结束符
 
+查看已经安装的某服务
+	rpm -qa | grep -i 服务名
+
+删除某服务
+	rpm -e 服务名
+
 查看系统内所有正在运行的python进程
 	ps -ef | grep python
 
+查看端口占用情况
+	lsof -i
+查看某一端口的占用情况
+	lsof -i:端口号
 
 重启
 	sudo reboot
@@ -73,7 +83,7 @@
 
 
 通过文件名和内容查找文件并输出(使用more log查看结果)
-	find -name '*' -exec grep "Register" {} \; -print 1>log 
+	find -name '*' -exec grep -n "Register" {} \; -print 1>log 
 
 
 用户操作
