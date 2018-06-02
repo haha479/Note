@@ -2,6 +2,10 @@
 	sudo reboot
 查看ubuntu版本号
 	cat /etc/issue
+查看CPU
+	top
+查看磁盘使用量
+	df -k
 从图形界面切换到命令行界面
 	快捷键 : ALT + CTRL + F2
 	开机自动进入命令行界面
