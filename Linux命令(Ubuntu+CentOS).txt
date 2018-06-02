@@ -1,0 +1,117 @@
+换源(centOS):
+	备份原文件
+		mv /etc/yum.repos.d/CentOS-Base.repo /etc/CentOS-Base.repo.bk
+
+	下载yum源配置文件, 放入/etc/yum.repos.d, 下载完成后重命名为:CentOS-Base.repo
+		wget 源URL
+
+	生成缓存
+		yum makecache
+
+	更新系统
+		yum -y update
+	
+安装图形界面(CentOS):
+	yum groupinstall "X Window System"
+	# GNOME Desktop是图形界面的一种
+	yum groupinstall "GNOME Destop"
+	
+	# 进入图形界面, 输入命令
+	init 5或 startx
+	# 切换到命令行模式
+	ctrl+alt+F2
+
+系统最大打开文件描述符数L /proc/sys/fs/file-max
+	1. 查看: cat
+	2. 设置
+		临时性  
+			echo 10000 > /proc/sys/fs/file-max  
+		永久性:在/etc/sysctl.com中设置
+			fs.file-max = 122
+系统当前使用的打开文件描述符数
+	查看
+		cat /proc/sys/fs/file-nr
+		其中第一个数表示当前系统已分配使用的打开文件描述符数，第二个数为分配后已释放的（目前已不再使用），第三个数等于file-max
+
+删除三天前的所有以.log结尾的文件
+	find 目标文件目录 -mtime + 30 -name "*.log" -exec rm -rf {} \;
+
+	# -exec 固定写法参数, {} 查找到的文件, \;结束符
+
+查看系统内所有正在运行的python进程
+	ps -ef | grep python
+
+
+重启
+	sudo reboot
+查看ubuntu版本号
+	cat /etc/issue
+查看CPU
+	top
+查看磁盘使用量
+	df -k
+从图形界面切换到命令行界面
+	快捷键 : ALT + CTRL + F2
+	开机自动进入命令行界面
+		修改 : 将/etc/default/grub 下的 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"修改成GRUB_CMDLINE_LINUX_DEFAULT="quiet splash text", 然后更新grub : sudo update-grub
+
+从命令行切换到图形界面(Ubuntu)
+	快捷键 : ALT + CTRL + F7
+	命令 : sudo lightdm
+	开机自动进入图形化界面
+		修改 : 配置/etc/X11/default-display-manager 里面的内容为/usr/sbin/gdm(不行的话先使用sudo apt-get install gdm)
+
+相关服务命令
+	systemctl is-enabled servicename.service #查询服务是否开机启动
+	sudo sysv-rc-conf #查看开机运行服务
+	systemctl disable *.service #取消开机运行
+	service servicename start #启动服务
+	service servicename stop #停止服务
+	service servicename restart #重启服务
+	systemctl reload *.service #重新加载服务配置文件
+	systemctl status *.service #查询服务运行状态
+
+
+通过文件名和内容查找文件并输出(使用more log查看结果)
+	find -name '*' -exec grep "Register" {} \; -print 1>log 
+
+
+用户操作
+	useradd创建一个新的用户  useradd -d/home/abc abc -g xiaobin -m  创建abc用户，并且创建如果/home/abc目录，如果/home/abc目录不存在，就自动创建这个目录，同时用户属于xiaobin组
+	
+	新创建的用户，默认不能sudo，需要进行下一操作
+	为创建的普通用户添加sudo权限
+	sudo usermod -a -G adm 用户名
+	sudo usermod -a -G sudo 用户名（需要在另一用户内操作，因为在该用户内不能使用sudo）
+
+	sudo userdel 用户名 删除该用户
+	sudo userdel -r 用户名 删除该用户以及该用户的主目录
+
+	sudo passwd 需要更改的用户名        更改用户密码 （也可以用来为新用户设置一个新的密码）
+
+	 whoami      查看当前用户
+	 
+	 cat /etc/passwd  查看系统用户信息
+ 
+ 用户组相关 ：
+ 
+	cat /etc/group   查看系统用户组
+
+	usermod -g 用户组 用户名    修改用户所在组  
+	将一个用户改到某一用户组 ，那该用户就有了该用户组对文件的操作权限 * * *
+
+	groupadd  组名   添加组
+
+	groupdel   组名  删除组  
+
+	groups 用户名   查看用户所在组 
+	 
+	su   更改的账户  更改账户    su - 用户名   更改用户并且直接到更改后的家目录 home
+	 
+	sudo -s      Ubuntu下切换到root的简单命令
+	 
+	su 普通用户     root用户切换到普通用户指令
+	 
+	groups 用户名       gourpmod + 三次tab键       查看用户在哪些组   
+
+
