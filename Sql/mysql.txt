@@ -53,6 +53,13 @@ MySQL常见的引擎
 		上面 用户名 : root 密码 : mysql 需要引号
 查看mysql中的用户
 	进入mysql数据库 select user,host from user (查看user表中的用户数据)
+更改密码限制:
+	设置安全级别
+		set global validate_password_policy=0; # 0为安全级别, 越高越严格
+	默认密码长度为8, 可以设置成其他值, 最小4位
+		set global validate_password_length=4;
+查看使用的端口号
+	show global variables like 'port'
 
 刷新命令 :
 	flush privileges;
@@ -63,7 +70,11 @@ MySQL常见的引擎
 将数据库备份 :
 	mysqldump –uroot –p 数据库名 > ~/Desktop/备份文件.sql;
 	将指定的数据库备份到 ~目录下的 Desktop目录下的 备份文件.sql
-
+函数:
+	调用方法: select 函数名(), 例如: select now() 
+	now()和current_date()的区别：
+		now()精确到时分秒, current_date()精确到年月日
+		
 恢复数据 :
 	mysql -uroot –p 数据库名 < ~/Desktop/备份文件.sql
 	##注意 : 事先要先创建好数据库用于恢复
@@ -118,7 +129,10 @@ python操作mysql的宏观架构
 		alter table 表名 add column 列名 varchar(20) not null
 	
 	往表中插入一个字段
-		update 表名 set 列名=xx where 条件
+		update 表名 set 列名=新值 where 条件
+
+	修改某个字段值
+		update 表明 set 字段=新值, ... where 条件
 
 	查询表中数据
 		select * from 表名（后面的*号表示查看表中的所有列,也可以指定）
