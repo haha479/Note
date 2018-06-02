@@ -1,2 +1,11 @@
 换源:
+
+安装图形界面:
+	yum groupinstall "X Window System"
+	# GNOME Desktop是图形界面的一种
+	yum groupinstall "GNOME Destop"
 	
+	# 进入图形界面, 输入命令
+	init 5或 startx
+	# 切换到命令行模式
+	ctrl+alt+F2
