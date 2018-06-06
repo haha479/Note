@@ -1,4 +1,4 @@
-换源(centOS):
+﻿换源(centOS):
 	备份原文件
 		mv /etc/yum.repos.d/CentOS-Base.repo /etc/CentOS-Base.repo.bk
 
@@ -25,13 +25,13 @@
 	1. 查看: cat /proc/sys/fs/file-max
 	2. 设置
 		临时性  
-			echo 10000 > /proc/sys/fs/file-max  
+			echo 10000 > /proc/sys/fs/file-max
 		永久性:在/etc/sysctl.com中设置
 			fs.file-max = 122
 系统当前使用的打开文件描述符数
 	查看
 		cat /proc/sys/fs/file-nr
-		其中第一个数表示当前系统已分配使用的打开文件描述符数，第二个数为分配后已释放的（目前已不再使用），第三个数等于file-max
+		其中返回的第一个数表示当前系统已分配使用的打开文件描述符数，第二个数为分配后已释放的（目前已不再使用），第三个数等于file-max
 
 删除三天前的所有以.log结尾的文件
 	find 目标文件目录 -mtime + 30 -name "*.log" -exec rm -rf {} \;
@@ -43,6 +43,13 @@
 
 删除某服务
 	rpm -e 服务名
+
+重启网络:
+	service NetworkManager stop
+
+　　	service network restart
+
+　　	service NetworkManager start
 
 查看系统内所有正在运行的python进程
 	ps -ef | grep python
@@ -82,7 +89,7 @@
 	systemctl status *.service #查询服务运行状态
 
 
-通过文件名和内容查找文件并输出(使用more log查看结果)
+通过文件名和内容查找文件并输出行数(使用more log查看结果)
 	find -name '*' -exec grep -n "Register" {} \; -print 1>log 
 
 
