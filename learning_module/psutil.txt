@@ -1,0 +1,12 @@
+psutil模块, 检查系统CPU, 吞吐量等
+
+获取CPU使用率
+	.cpu_percent()
+
+获取内存信息
+	.virtual_memory()
+磁盘信息
+	.disk_partitions()
+
+获取网络信息(如果需要获取单个网卡的io信息, 加上pernic=True)参数
+	.net_io_counters()
