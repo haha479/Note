@@ -1,4 +1,4 @@
-﻿换源(centOS):
+﻿ 换源(centOS):
 	备份原文件
 		mv /etc/yum.repos.d/CentOS-Base.repo /etc/CentOS-Base.repo.bk
 
@@ -14,7 +14,7 @@
 安装图形界面(CentOS):
 	yum groupinstall "X Window System"
 	# GNOME Desktop是图形界面的一种
-	yum groupinstall "GNOME Destop"
+	yum groupinstall "GNOME Desktop"
 	
 	# 进入图形界面, 输入命令
 	init 5或 startx
@@ -44,6 +44,9 @@
 删除某服务
 	rpm -e 服务名
 
+CentOS配置网络网卡
+	/etc/sysconfig/network-scripts/ifcfg-ens160, 将ONBOOT="no"改为"yes"
+
 重启网络:
 	service NetworkManager stop
 
@@ -53,11 +56,12 @@
 
 查看系统内所有正在运行的python进程
 	ps -ef | grep python
-
-查看端口占用情况
-	lsof -i
-查看某一端口的占用情况
+	
+查看某一端口的占用情况(Ubuntu)
 	lsof -i:端口号
+	lsof -i
+查看端口占用情况(CentOS)
+	netstat -nltp | grep num
 
 重启
 	sudo reboot
@@ -88,10 +92,17 @@
 	systemctl reload *.service #重新加载服务配置文件
 	systemctl status *.service #查询服务运行状态
 
+关闭防火墙服务
+	service firewalld stop
 
 通过文件名和内容查找文件并输出行数(使用more log查看结果)
 	find -name '*' -exec grep -n "Register" {} \; -print 1>log 
 
+文件操作权限
+	1. x, 2. w, 4. r
+
+解决FTP服务器不允许使用root登陆的方法
+	修改/etc/vsftpd/ftpusers, /etc/vsftpd/user_list, 这两个文件中含有默认不支持登陆的用户, 注释即可
 
 用户操作
 	useradd创建一个新的用户  useradd -d/home/abc abc -g xiaobin -m  创建abc用户，并且创建如果/home/abc目录，如果/home/abc目录不存在，就自动创建这个目录，同时用户属于xiaobin组
