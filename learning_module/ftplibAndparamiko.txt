@@ -1,0 +1,48 @@
+﻿ftplib:
+	Python用来连接ftp服务器的模块, 无需安装
+	大概连接的步骤
+	conn = ftplib.FTP() # 实例化FTP对象
+	conn.connect(host, port, timeout) # 连接服务器, 设置超时时间
+	conn.login(username, password) # 登陆服务器用户
+	conn.cwd(folder) # 进入指定服务器的目录, 默认不支持含中文的目录
+
+
+paramiko:
+	Python用来连接sftp服务器, 可使用pip安装
+	a: 基于SFTPClient类连接sshd服务器: 
+	特点: 一般用于实现对远程服务器的上传, 下载和对远程目录文件的操作
+	trans = paramiko.Transport((host, port)) # 连接服务器
+	trans.connect(username=username, password=password) # 登陆用户
+	sftp = paramiko.SFTPClient.from_transport(trans) # 创建sftp对象
+	sftp.get(remote_dir, local_dir) # 下载
+	sftp.put(remote_ip, local_dir) # 上传
+
+	b: 通过SSHClient类连接
+	特点: SSHClient类是SSH服务会话的高级表示，封装了传输、通道以及SFTPClient的校验、建立方法，通常用于执行命令
+	ssh = paramiko.SSHClient()
+	# 获取客户端host_keys,默认~/.ssh/known_hosts， 非默认路径需指定
+	# ssh.load_host_keys()
+	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+	# 创建ssh连接
+	ssh.connect(hostname=hostname, username=username, password = password, timeout=timeout)
+	# 调用远程执行命令的方法
+	stdin, stdout, stderr = ssh.exec_command('cd /data/sftp')
+	# 打印命令执行结果, 得到python列表形式
+	# print(stdout.read())
+	print(stdout.readlines())
+	
+	c:通过SSHClient类连接, 使用get_transport()对sftp操作
+	# 获取SSHClient实例
+	ssh = paramiko.SSHClient()
+	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+	# 连接SSH服务端
+	ssh.connect(hostname=hostname, username=username, password=password, timeout=timeout )
+	# 获取Transport实例
+	# tran = ssh.get_transport()
+	# 获取SFTP实例
+	# sftp = paramiko.SFTPClient.from_transport(tran)
+	# 上面两部可并作一步
+	sftp = ssh.open_sftp()
+	# 查看文件, 下载操作
+	sftp.listdir(folder)
+	sftp.get(remotepath, localpath)
