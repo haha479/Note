@@ -20,7 +20,9 @@
 	init 5或 startx
 	# 切换到命令行模式
 	ctrl+alt+F2
-
+	# 设置开机默认启动方式
+	systemctl set-default multi-user.target  //设置成命令模式
+	systemctl set-default graphical.target  //设置成图形模式
 系统最大打开文件描述符数 
 	1. 查看: cat /proc/sys/fs/file-max
 	2. 设置
