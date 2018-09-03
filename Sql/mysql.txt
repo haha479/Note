@@ -1,4 +1,4 @@
-MySQL 
+﻿MySQL 
 引擎
 	查看提供的引擎:
 		show engines
@@ -53,6 +53,8 @@ MySQL常见的引擎
 		上面 用户名 : root 密码 : mysql 需要引号
 查看mysql中的用户
 	进入mysql数据库 select user,host from user (查看user表中的用户数据)
+查看完整的初始密码规则
+	show variables like 'validate_password%';
 更改密码限制:
 	设置安全级别
 		set global validate_password_policy=0; # 0为安全级别, 越高越严格
