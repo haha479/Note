@@ -1,5 +1,8 @@
 ﻿Centos下redis的配置:
-	设置密码: /etc/redis.conf ,找到 requirepass youpassword
+	取消只允许本地连接: 注释 bind:127.0.0.1
+	设置密码: /etc/redis.conf ,找到 requirepass foobared , 修改成requirepass youpassword
+使用密码登陆:
+	redis-cli -a youpassword
 事务 :
 	redis事务的功能:
 		redis中事务保证了数据操作的一致性, 就是要不都执行, 要不都不执行,
