@@ -1,0 +1,50 @@
+ selenium :
+ 	是一个自动化测试工具,可以按指定的命令自动操作,
+ 	selenium可以直接运行在浏览器上,它支持所有的浏览器,包括像PhantomJS无界面浏览器
+
+ 	selenium自己不带浏览器,不支持浏览器的功能,需要与第三方的浏览器结合在一起才能使用
+
+	
+ PhantomJS :
+ 	是一个无界面浏览器,可以完成普通第三方浏览器执行的操作
+
+使用selenium
+
+	创建浏览器对象
+		driver = webdriver.PhantonJS()
+	发送请求
+		driver.get(url)
+
+	截屏
+		driver.save_screenshot("新建图片名")
+
+	通过id找到指定元素(输入框)，并且使用键盘输入
+		键盘输入需导入
+		from selenium.webdriver.common import keys
+		driver.find_element_by_id("id值").send_key("键盘的值")
+		点击
+			driver.find_element_by_id("id值").click()
+	也可以通过xpath找到元素
+		driver.find_element_by_xpath("")
+	
+	执行JS语句
+		driver.execute_script(js语句)
+
+	获取网页源码
+		driver.page_source
+
+	获取cookie
+		driver.get_cookies()
+
+	关闭浏览器
+		driver.quit()
+		
+	模拟全选输入框内容
+	剪切
+
+使用PhantomJS处理分页加载的网页
+	分页加载
+		: 点击下一页时,页面的URL不会变化
+		
+	模拟浏览器点击下一页,并且写一个条件,条件满足就说明到了最后一页
+	满足就停止爬取
