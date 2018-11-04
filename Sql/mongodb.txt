@@ -113,9 +113,9 @@ mongodb数据类型
 与python交互
 	建立连接并创建客户端
 		无安全认证	
-			client = MongoClient('mongodb://localhost:27017')
+			client = pymongo.MongoClient('mongodb://localhost:27017')
 		有安全认证
-			client = MongoClient('mongodb://用户名:密码@localhost:27017/数据库名称')
+			client = pymongo.MongoClient('mongodb://用户名:密码@localhost:27017/数据库名称')
 
 	获得数据库
 		db = client.数据库
