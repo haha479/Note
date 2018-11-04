@@ -48,6 +48,8 @@ s查看ssh公钥文件内容
 	
 	查看最近两次变动及其变动点		
 		git log -p -2
+	修改commit注释
+		git commit --amend  (进入vi编辑)
 
 远程
 	强制推送
