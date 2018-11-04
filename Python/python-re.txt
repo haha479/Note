@@ -1,0 +1,29 @@
+
+# 将正则表达式编译成一个pattern规则对象
+pattern = re.compile("规则")
+	compile("规则",)
+	第二个参数 : 
+		re.I : 忽略大小写
+		re.S : 表示全文匹配
+
+pattern.match() 从起始位置开始往后查找,返回第一个符合规则的,只匹配一次
+	m = pattern.match() : 
+		match(字符串,begin,end)
+
+	# 返回匹配的子串
+	m.group()
+		group(0) : 表示匹配的所有子串
+		group(1) : 匹配的第一组,2则是第二组
+
+	# 返回下标
+	m.span(start,end)
+下面用法跟上面都一样
+pattern.serach(字符串,begin,end) : 从任何位置开始查找,同上
+pattern.findall(字符串,begin,end)　: 所有的全部匹配,返回列表
+pattern.finditer(字符串,begin,end) : 所有的全部匹配,返回的是一个迭代器
+pattern.split(字符串,count) : 分割字符串,返回列表
+pattern.sub() : 替换
+	将匹配到正则的串替换成指定的子串
+	pattern.sub("替换成的",被替换的字符串)
+
+
