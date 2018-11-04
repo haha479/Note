@@ -1,0 +1,74 @@
+
+模拟浏览器请求服务器的四种方式
+
+一 :
+	发送一个请求到指定url,并返回服务器响应的类文件对象
+	response = urllib2.urlopen(url,data,headers)
+	弊端 :
+		不能支持构造HTTP请求,不能给请求添加head
+
+二 (urlopen):
+	# 创建一个请求对象
+	request = urllib2.Request(url,data,headers)
+
+	# 使用urlopen发送请求,返回一个类文件对象
+	response = urllib2.urlopen(request)
+
+三 (HTTPHandler):
+	# 构建一个HTTPHandler处理器对象
+	http_handler = urllib2.HTTPHandler(debuglevel=1)
+
+	# 构建一个自定义的opener用来发送请求
+	opener = urllib2.build_opener(http_handler)
+
+	# 构建一个请求对象
+	request = urllib2.Request(url)
+
+	# 使用自定义的opener发送请求,返回一个类文件对象
+	response = opener.open(request)
+
+四 (requests):
+		# 使用requests.get()请求
+		req = requests.get(url)
+
+		# req的方法
+		req.content --返回网页代码
+		req.headers --返回请求头信息
+		req.....
+
+五 (代理):
+	# 启动代理
+	proxyswitch = True
+
+	# 构建handler处理器对象
+	httpproxy_handler = urllib2.ProxyHandler({"http":"代理IP地址:端口"})
+		#私密代理
+			httpproxy_handler = urllib2.ProxyHandler({"http":"用户名:密码@代理IP地址:端口"})
+
+	# 构建一个没有代理的处理器对象
+	nullproxy_handler = urllib2.ProxyHandler({})
+
+	# 构建一个opener对象
+	opener = urllib2.build_opener(httpproxy_handler) 
+	或者 
+		opener = urllib2.build_opener(nullproxy_handler)
+		由proxyswitch的值决定
+
+	# 构建一个全局的opener对象,之后所有的请求都可以用urlopen发送,也附带handler功能
+	urllib2.install_opener(opener)
+
+	# 构建一个请求对象
+	request = urllib2.Request(url)
+
+	# 使用urlopen发送请求,返回类文件对象
+	response = urllib2.urlopen(request)
+
+
+
+
+
+
+
+
+
+
