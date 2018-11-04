@@ -1,0 +1,106 @@
+python2中使用的是urllib2,python3中使用urllib.request
+
+
+urllib.urlencode()用于转码,接收的是一个字典
+urllib2.unquote().用于解码
+
+ssl._create_unverified_context(),忽略ssl安全验证
+
+User-Agent: 决定用户的浏览器，获取响应的HTMl页面效果
+
+发送一个请求到指定url,并返回服务器响应的类文件对象
+	response = urllib2.urlopen(url,data=None,timeout)
+urlopen弊端：不能支持构造http请求，不能给请求添加head
+
+urllib2默认的User-Agent: python-urllib/2.7
+在发送时,尽量模拟浏览器的方式请求,所以一般不能使用默认的
+(默认就等于暴露了自己是爬虫),就需要重构请求,并且自己设置请求时发送的User-Agent值
+
+
+构造一个请求对象
+	headers信息
+	ur_headers = {访问网页中的User-Agent的值:例如:}
+	request = urllib2.Request(url,data=data,headers=ur_headers)
+
+	添加/修改一个HTTP报头,add_header()方法
+	request.add_header("User-Agent","自己定义的报头header")
+	获取一个已有的HTTP报头,get_header()方法,只有开头大写
+	request.get_header("User-agent")
+
+返回服务器响应的类文件对象
+response = urllib2.urlopen(request)
+
+	服务器返回的类文件对象支持python文件对象的操作方法
+	read()方法就是读取文件里的全部内容,返回字符串
+		html = response.read()
+
+	返回HTTP的响应码，成功返回200，3重定向，4服务器页面出错，5服务器内部问题
+	response.getcode()
+	返回服务器相应的HTTP报头
+	response.info()
+
+
+1.模拟使用浏览器访问百度,在抓包工具中查看请求
+
+2.拼接url，使用get方法  (url+?+请求信息),使用转码
+
+3.贴吧爬虫小案例
+	定义三个函数,一个爬取数据,一个写入本地文件,一个负责组合每个页面的url
+
+4.POST请求的模拟案例
+抓取post请求信息,一定要用抓包工具
+	1.利用抓包工具获取网页的请求信息
+
+		进入有道网页,随便输入一个值翻译,利用抓包工具查看左边fanyi.youdao.com,右边WebForms,找到i的值,该值就是翻译的结果
+		copy Raw 中的 POST 地址 http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule
+
+		这一串就是创建请求时url的值
+		url = http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule
+
+
+		copy 在Raw中空行下面的一行
+			其中 i 的值就是需要翻译的值
+			利用subl的正则替换成字典的key value形式(键值都用双引号包起来)
+			"i" : "%E5%93%88%E5%93%88%0A%0A"
+			"from" : "AUTO"
+			"to" : "AUTO"
+			"smartresult" : "dict"
+			"client" : "fanyideskweb"
+			"salt" : "1510820216079"
+			"sign" : "84385c791b2428079b29105680361301"
+			"doctype" : "json"
+			"version" : "2.1"
+			"keyfrom" : "fanyi.web"
+			"action" : "FY_BY_CLICKBUTTION"
+			"typoResult" : "false"
+
+	2.自定义formdata字典,将 i 的值改为让用户输入,然后使用urlencode转码整个formdata,在创建对象时将data传入
+		
+	3.自定义headers,在抓包工具中 copy
+		Raw中信息,host,kooie，post，Referer,connection,content-lenth可以不要,也可以写
+		Accept-Encoding一定不能要
+
+			headers = {
+				"Accept": "application/json, text/javascript, */*; q=0.01",
+				"Origin": "http://fanyi.youdao.com",
+				"X-Requested-With": "XMLHttpRequest",
+				"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36",
+				"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+				"Accept-Language": "zh-CN,zh;q=0.9"
+			}
+
+
+5.抓取ajax加载网页的数据,直接获取后台的ajax文件(通过抓包工具)
+	一般ajax传输都用的json文件
+	所以爬取像ajax这类网页时,要想办法获取到json文件,有了json文件就等于有了数据,
+	json字符串解析网站:  https://www.json.cn/
+
+
+6.利用cookie模拟登陆
+	登陆百度网盘,先在浏览器中登陆,在抓包工具中获得cookie信息
+	将cookie写在headers中,
+
+
+代理
+代理网站 : 西刺 - www.xicidaili.com
+	
