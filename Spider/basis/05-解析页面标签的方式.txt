@@ -1,0 +1,64 @@
+﻿解析网页页面中标签的方法
+
+	xpath :
+ 		是一门在XML文档中查找信息的语言,XPath 使用路径表达式来选取 XML 文档中的节点或者节点集
+		XML : 可扩展标记语言
+		
+		xpath 语法 : 
+
+			// : 从任何节点查找
+
+			[@class="box1"] : 选取class属性=box1的节点
+
+			/text() : 提取节点的内容
+				
+				....
+			取一个根节点
+				node = html.xpath("//div[@class=""]")
+
+				在根节点下面查找
+				node_in = node.xpath("./span")
+
+	beautifulsoup :
+		导入bs4
+		from bs4 import beautifulSoup
+
+		# 查找
+	
+	PyQuery:
+		语法类似jQuery
+
+
+	re :
+ss
+# 将正则表达式编译成一个pattern规则对象
+pattern = re.compile("规则")
+	compile("规则",)
+	第二个参数 : 
+		re.I : 忽略大小写
+		re.S : 表示全文匹配
+		....
+
+pattern.match() 从起始位置开始往后查找,返回第一个符合规则的,只匹配一次
+	m = pattern.match() : 
+		match(字符串,begin,end)
+
+	# 返回匹配的子串
+	m.group()
+		group(0) : 表示匹配的所有子串
+		group(1) : 匹配的第一组,2则是第二组
+
+	# 返回下标
+	m.span(start,end)
+下面用法跟上面都一样
+pattern.serach(字符串,begin,end) : 从任何位置开始查找,同上
+pattern.findall(字符串,begin,end)　: 所有的全部匹配,返回列表
+pattern.finditer(字符串,begin,end) : 所有的全部匹配,返回的是一个迭代器
+pattern.split(字符串,count) : 分割字符串,返回列表
+pattern.sub() : 替换
+	将匹配到正则的串替换成指定的子串
+	pattern.sub("替换成的",被替换的字符串)
+
+
+
+
