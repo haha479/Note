@@ -1,0 +1,38 @@
+cookielib库
+
+	cookiejar : 用来存储cookie内容
+	filecookiejar 用来保存文件用
+	MozillaCookieJar 和LWPCooke是filecookiejar的子类
+
+
+
+# 人人网有一个登陆接口
+renren.com/Plogin.do
+
+# 创建cookiejar对象,可以保存cookie信息
+cookie = cookielib.cookiejar()
+
+# 构建处理器对象,用来处理cookie,参数是是构建的cookiejar对象
+cookie_handler = urllib2.HTTPCookieProcess(cookie)
+
+# 通过cookie处理器对象,创建opener
+opener = urllib2.build_opener(cookie_handler)
+
+# 使用opener的addheaders添加一个报头信息
+opener.addheaders = [()]
+
+# 账号密码信息
+data = {"email":'账户名',"password":"密码"}
+
+# 通过urllib.urlencode转码
+data = urllib.urlencode(data)
+
+# 第一次是post请求,发送账号密码,获取cookie
+request = urllib2.Request(url,data=data)
+
+# 发送第一次的post请求,生成登陆后的cookie
+response = opener.open(rquest)
+
+
+# 再次使用opener调用open也自带cookie信息,因为第一次登陆已经保存了cookie
+response = opener.open(url)
