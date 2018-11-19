@@ -1,0 +1,22 @@
+设置请求头字段:
+	self.set_header('key', 'value')
+设置默认请求头字段:
+	set_default_headers: 在handler类下定义的方法, 在方法中实现, self.set_header(), 设置默认某字段后, 在请求方法下再实现set_header是会覆盖set_default_headers方法中实现的self.set_header的
+
+设置状态码:
+	self.set_status(403, reason=None), reason为状态码后的描述, 若为None, 则会自动填充默认的信息, 例如404为: Not Found
+
+抛出错误:
+	self.send_error(err_code)
+		抛出一个错误, 后面代码不会执行
+	write_error
+		定义出错后展示在前端的信息
+		接收两个参数, 一个为状态码, 一个为**kwargs, 里面含有标题和错误描述两个key
+
+预处理:
+	prepare()
+		在执行对应请求方式的HTTP方法前先执行.
+		与中间件的区别: 在执行prepare后不能返回再到prepare(),并不是所有的请求都会经过prepare() 
+
+模板渲染:
+	self.render()
