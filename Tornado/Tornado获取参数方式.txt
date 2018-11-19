@@ -1,0 +1,7 @@
+获取查询参数(一般熟url中):self.get_query_argument()
+获取请求体参数(表单, body): self.get_body_argument()
+前两类的整合: self.get_argument()
+获取其他请求参数: self.request
+	获取用户上传文件: self.request.files
+	获取请求headers参数: self.request.headers
+	...
