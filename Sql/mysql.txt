@@ -63,6 +63,10 @@ MySQL常见的引擎
 查看使用的端口号
 	show global variables like 'port'
 
+防止注入攻击
+	避免使用字符串拼接SQL语句, 避免不了的情况下使用反引号 '`'
+	使用变量绑定的语法: execute(... value(%s, %s...), "valu1", "valu2"...)
+
 刷新命令 :
 	flush privileges;
 
@@ -101,6 +105,8 @@ python操作mysql的宏观架构
 	查看当前选择的数据库
 		select database();
 表 :
+	查看创建表时的语句
+		show create table tablename
 	查看当前数据库中所有表
 		show tables;
 	创建表
@@ -134,7 +140,7 @@ python操作mysql的宏观架构
 		update 表名 set 列名=新值 where 条件
 
 	修改某个字段值
-		update 表明 set 字段=新值, ... where 条件
+		update 表名 set 字段=新值, ... where 条件
 
 	查询表中数据
 		select * from 表名（后面的*号表示查看表中的所有列,也可以指定）
