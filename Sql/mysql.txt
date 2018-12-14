@@ -48,6 +48,9 @@ MySQL常见的引擎
 		alter table table_name add index index_name(列名1, 列名2, ..)
 		create index 索引名称 on '表名'('字段名1','字段名2', ..)
 
+mysql刚安装时获取默认的root密码:
+	grep 'temporary password' /var/log/mysqld.log
+
 创建用户并且赋予权限:
 	grant all privileges on *.* to 'root'@'%' identified by 'mysql' with grant option;
 		上面 用户名 : root 密码 : mysql 需要引号
