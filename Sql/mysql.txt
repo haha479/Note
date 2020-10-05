@@ -52,8 +52,8 @@ mysql刚安装时获取默认的root密码:
 	grep 'temporary password' /var/log/mysqld.log
 
 创建用户并且赋予权限:
-	grant all privileges on *.* to 'root'@'%' identified by 'mysql' with grant option;
-		上面 用户名 : root 密码 : mysql 需要引号
+	grant all privileges on *.* to 'root'@'%' identified by '密码' with grant option;
+	其中"*.*"代表所有资源所有权限,“'root'@%”其中root代表账户名，%代表所有的访问地址。identified by '密码'，这里换成数据库root用户的密码，WITH GRANT OPTION表示允许级联授权
 查看mysql中的用户
 	进入mysql数据库 select user,host from user (查看user表中的用户数据)
 查看完整的初始密码规则
