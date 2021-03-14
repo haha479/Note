@@ -196,7 +196,8 @@ python操作mysql的宏观架构
 	分页
 		limit start,count  从start开始,获取count条数据（都是索引）
 		
-	
+子查询:
+	子查询中, 子句作为表必须起别名, 哪怕不使用这个别名
 
 
 
