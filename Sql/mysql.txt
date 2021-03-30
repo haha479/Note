@@ -135,7 +135,7 @@ python操作mysql的宏观架构
 		rename table 原表名 to 新表名;
 	
 	查看表的创建语句
-		show create table "表名";
+		show create table 表名;#(表名加引号会报错)
 
 数据操作
 	往表中添加一列
