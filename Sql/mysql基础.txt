@@ -39,10 +39,13 @@ $mysql的介绍
 	5.7
 	8.0
 
-四、mysql服务的启动何停止
+四、mysql服务的启动如何停止
+	1、windows下
 	net start 服务名
 	net stop 服务名
-
+	2、linux下
+	systemctl start 服务名
+	systemctl stop 服务名
 五、mysql服务端的登陆和退出
 
 	登录: mysql [-h主机名 -P端口号] -u用户名 -p[密码]
