@@ -62,6 +62,12 @@ CentOS配置网络(net模式)
 	service NetworkManager stop
 　　	service network restart
 　　	service NetworkManager start
+	若主机能ping通虚拟机, 虚拟机不能ping通主机, 可能是windows禁ping了
+	cmd中修改允许ping
+		netsh firewall set incmpsettin 8
+	禁止
+		netsh firewall set incmpsettin 8 disable
+
 
 
 查看系统内所有正在运行的python进程
