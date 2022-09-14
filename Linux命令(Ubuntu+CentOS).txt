@@ -46,15 +46,14 @@
 删除某服务
 	rpm -e 服务名
 
-CentOS配置网络网卡
+CentOS配置网络(net模式)
+	设置启动时自动激活网卡
 	/etc/sysconfig/network-scripts/ifcfg-ens160, 将ONBOOT="no"改为"yes"
-
-重启网络:
+	重启网络
 	service NetworkManager stop
-
 　　	service network restart
-
 　　	service NetworkManager start
+
 
 查看系统内所有正在运行的python进程
 	ps -ef | grep python
