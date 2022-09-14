@@ -23,6 +23,15 @@
 	# 设置开机默认启动方式
 	systemctl set-default multi-user.target  //设置成命令模式
 	systemctl set-default graphical.target  //设置成图形模式
+
+centos7安装ifconfig
+	尝试使用yum安装
+		yum install ifconfig
+	若提示无安装包,则运行以下命令,从输出中找到基础包
+		yum search ifconfig
+	找到基础包安装
+		yum install net-tools.x86_64
+
 系统最大打开文件描述符数 
 	1. 查看: cat /proc/sys/fs/file-max
 	2. 设置
