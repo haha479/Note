@@ -64,9 +64,9 @@ CentOS配置网络(net模式)
 　　	service NetworkManager start
 	若主机能ping通虚拟机, 虚拟机不能ping通主机, 可能是windows禁ping了
 	cmd中修改允许ping
-		netsh firewall set incmpsettin 8
+		netsh firewall set icmpsetting 8
 	禁止
-		netsh firewall set incmpsettin 8 disable
+		netsh firewall set icmpsetting 8 disable
 
 
 
