@@ -31,7 +31,13 @@ centos7安装ifconfig
 		yum search ifconfig
 	找到基础包安装
 		yum install net-tools.x86_64
-
+添加环境变量
+	在/etc/profile.d/目录下新建存放环境变量的.sh文件
+	vi /etc/profile.d/my_env.sh
+	添加内容(以添加java环境变量为例)
+	#JAVA_HOME
+	export JAVA_HOME=/opt/module/jdk1.8.0_144
+	export PATH=$PATH:$JAVA_HOME/bin
 系统最大打开文件描述符数 
 	1. 查看: cat /proc/sys/fs/file-max
 	2. 设置
