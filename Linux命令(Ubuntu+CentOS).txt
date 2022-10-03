@@ -38,6 +38,8 @@ centos7安装ifconfig
 	#JAVA_HOME
 	export JAVA_HOME=/opt/module/jdk1.8.0_144
 	export PATH=$PATH:$JAVA_HOME/bin
+	使脚本重新生效
+	source /etc/profile.d/my_env.sh
 系统最大打开文件描述符数 
 	1. 查看: cat /proc/sys/fs/file-max
 	2. 设置
