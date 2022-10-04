@@ -40,6 +40,14 @@ centos7安装ifconfig
 	export PATH=$PATH:$JAVA_HOME/bin
 	使脚本重新生效
 	source /etc/profile
+多台服务器间允许ssh无密登录
+	ssh生成公钥和私钥(默认只生成当前用户的钥,且保存在当前用户家目录下)
+		ssh-keygen -t rsa
+	将当前主机的公钥拷贝至另一台需要访问的主机
+		ssh-copy-id 用户@另一台主机地址
+	在另一台主机的用户家目录下/.ssh会生成authorized_keys文件,该文件中记录了可以来免密访问的用户和主机
+	总结：哪台服务器/home/user/.ssh/authorized_keys, 文件里有我的密钥,我就能用user用户免密登录这台服务器
+
 系统最大打开文件描述符数 
 	1. 查看: cat /proc/sys/fs/file-max
 	2. 设置
