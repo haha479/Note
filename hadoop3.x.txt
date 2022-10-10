@@ -75,11 +75,6 @@ hadoop常用配置文件
 		hdfs --daemon start/stop namenode/datanode/secondarynamenode
 	YARN
 		yarn --daemon start/stop resourcemanager/nodemanager
-HDFS操作
-	创建文件
-		hadoop fs -mkdir /文件名
-	上传文件
-		hadoop fs -put 本地文件路径 hdfs文件系统路径
 配置日志的聚集
 	#将所有集群服务器的日志聚集到HDFS, 方便用户查看
 	配置yarn-site.xml文件
