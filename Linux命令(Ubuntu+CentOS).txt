@@ -79,11 +79,22 @@ find命令的使用
 		find 目标文件目录 -mtime +3 -name "*.log" -exec rm -rf {} \;
 		# -exec 固定写法参数,指运行shell命令. {} 查找到的文件, \;结束符
 
-查看已经安装的某服务
+通过服务名查看已经安装的rpm服务包
 	rpm -qa | grep -i 服务名
 
 删除某服务
 	rpm -e 服务名
+	删除某服务
+	
+查看进程
+	ps -ef | grep 进程名
+
+查看某一端口的占用情况(Ubuntu)
+	lsof -i:端口号
+	lsof -i
+
+查看端口占用情况(CentOS)
+	netstat -nltp | grep 端口号
 
 CentOS配置网络(net模式)
 	设置启动时自动激活网卡
@@ -98,19 +109,6 @@ CentOS配置网络(net模式)
 	禁止
 		netsh firewall set icmpsetting 8 disable
 
-
-
-查看系统内所有正在运行的python进程
-	ps -ef | grep python
-	
-查看某一端口的占用情况(Ubuntu)
-	lsof -i:端口号
-	lsof -i
-查看端口占用情况(CentOS)
-	netstat -nltp | grep num
-
-重启
-	sudo reboot
 查看ubuntu版本号
 	cat /etc/issue
 查看CPU
@@ -137,15 +135,11 @@ CentOS配置网络(net模式)
 	service servicename restart #重启服务
 	systemctl reload *.service #重新加载服务配置文件
 	systemctl status *.service #查询服务运行状态
-
-关闭防火墙服务
-	service firewalld stop
+	systemctl reboot, systemctl poweroff #重启与关机
+	service firewalld stop #关闭防火墙服务
 
 通过文件名和内容查找文件并输出行数(使用more log查看结果)
-	find -name '*' -exec grep -n "Register" {} \; -print 1>log 
-
-文件操作权限
-	1. x, 2. w, 4. r
+	find -name '*' -exec grep -n "查找的关键字" {} \; -print 1>log 
 
 解决FTP服务器不允许使用root登陆的方法
 	修改/etc/vsftpd/ftpusers, /etc/vsftpd/user_list, 这两个文件中含有默认不支持登陆的用户, 注释即可
