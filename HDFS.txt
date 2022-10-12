@@ -38,4 +38,10 @@ HDFS的shell操作
 		-setrep 副本数
 	其他查看,删除文件,修改文件权限等等都与Linux命令相同
 
-
+HDFS的写数据流程
+	1.客户端向NameNode请求上传文件,
+	2.NameNode检查客户端权限, 检查目录结构, 然后响应可以上传文件
+	3.客户端请求上传第一个block, 情返回DataNode
+	4.NameNode返回多个DataNode节点,表示采用这些节点存储数据(副本)
+	5.客户端请求DataNode建立传输通道, DataNode逐个向前应答
+	6.传输数据
