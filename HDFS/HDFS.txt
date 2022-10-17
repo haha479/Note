@@ -59,8 +59,15 @@ HDFS的读数据流程
 	读取过程是串行的, 即多个数据块是串行传输
 
 NN和2NN工作机制
+	在NameNode初始化后, hadoop目录/data/dfs/name/current目录下会产生fsImage,Edits等文件.
 	fsImage(镜像文件)存储数据
+		HDFS文件系统元数据的一个永久性的检查点, 其中包含HDFS文件系统的所有目录和文件inde的序列化信息.
 	Edits(编辑日志)以追加的方式存储对数据的操作(如客户端发来的对数据增删改请求)并不计算结果
-	服务器启动时, 将fsImage与Edits整合后的数据加载到内存
-	2nn中定时执行CheckPoint操作,即将fsImage与Edits进行整合(即对应Edits中的记录对fsImage中的数据进行修改)并且写入内存, 
+		存放HDFS文件系统的所有更新操作的路径, 文件系统客户端执行的所有写操作首先会被记录到Edits文件中.
+	每次NameNode启动时, NN将fsImage与Edits整合(即对应Edits中的记录对fsImage中的数据进行修改),并将整合后的数据加载到内存
+	2NN中定时执行CheckPoint操作,即将fsImage与Edits进行整合并且写入内存, 
 	CheckPoint触发条件:1.定时时间到, Edits中的数据满了
+	查看fsImage文件
+		hdfs oiv -p 转换为什么文件类型(XML) -i 镜像文件 -o 输出路径
+	查看Edits文件
+		hdfs oev 同查看fsImage
