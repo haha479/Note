@@ -75,6 +75,5 @@ DataNode工作机制
 	DataNode启动时, 主动向NameNode汇报block信息, 
 	NameNode记录下来汇报过的DataNode, 认为其是可工作的.
 	每隔3秒钟, DataNode向NameNode发送"心跳", 若NameNode较长时间没有收到DataNode心跳,
-	则认为该DataNode损坏, NameNode不会再安排客户端与该DataNode有相互的读写交互.
+	则认为该DataNode损坏, NameNode不会再安排客户端与该DataNode有相互的读写交互, 直到DataNode再次发送心跳.
 	每隔6小时, DataNode向NameNode汇报当前解读信息(扫描自己的节点块信息).
-	
