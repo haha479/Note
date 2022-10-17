@@ -70,7 +70,7 @@ hadoop常用配置文件
 	配置mapred-site.xml文件, 配置指定历史服务器端地址和历史服务器web端地址
 	开启历史服务器
 		mapred --daemon start historyserver
-服务组件逐一启动或停止
+单个服务组件的启动或停止
 	HDFS组件
 		hdfs --daemon start/stop namenode/datanode/secondarynamenode
 	YARN
