@@ -1,0 +1,5 @@
+mapReduce是分布式的计算框架
+
+mapReduce编程规范
+	用户编写的程序分成三个部分: Mapper, Reducer, Driver
+	
