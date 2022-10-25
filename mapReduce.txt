@@ -11,6 +11,10 @@ mapReduce运行过程
 	从mapper的输出到reducer的输入之前, 数据通过key进行了整理, 即按照key排序并且数据按顺序进入reducer,
 	进入reducer的数据key即为mapper中输出的key, value为一个容器, 其中存放了mapper中输出的value, 若key相同,
 	则该容器中有多个值
-
+数据切片与MapTask并行度决定机制
+	1. 一个Job的Map阶段并行度由客户端在提交Job时的切片数决定
+	2. 每一个Split切片分配一个MapTask并行实例处理
+	3. 默认情况下, 切片大小=BlockSize
+	4. 切片时不考虑数据集整体, 而是逐个针对每一个文件单独切片
 序列化与反序列化
 	将内存中的对象转换为字节码的过程称为序列化, 相反的过程即为反序列化
