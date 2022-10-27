@@ -15,6 +15,7 @@ mapReduce运行过程
 	若key相同,则该容器中有多个值(整合:也属于shuffle过程之中)
 
 数据切片与MapTask并行度决定机制
+	数据切片只是在逻辑上对输入进行分片,其是MapReduce程序计算输入数据的单位.
 	1. 一个Job的Map阶段并行度由客户端在提交Job时的切片数决定
 	2. 每一个Split切片分配一个MapTask并行实例处理
 	3. 默认情况下, 切片大小=BlockSize
