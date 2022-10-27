@@ -9,8 +9,8 @@ mapReduce编程规范
 mapReduce运行过程
 	大概执行顺序:Mapper->Reducer->Driver
 	mapper从输入文件中获取一行作为value, key为偏移量, 每处理一行调用一次map()方法,
-	map()中处理之后, 输出key,value给reducer.
-	从mapper的输出到reducer的输入之前, 数据通过key进行了整理(shuffle), 即按照key排序并且数据按顺序进入reducer依次处理,
+	map()中处理之后, reducer从mapper中拉取KV数据.
+	从map方法之后到reduce方法之前, 数据通过key进行了整理(shuffle), 即按照key排序并且数据按顺序进入reducer依次处理,
 	进入reducer的数据key即为mapper中输出的key, value为一个容器, 其中存放了mapper中输出的value, 
 	若key相同,则该容器中有多个值(整合:也属于shuffle过程之中)
 
