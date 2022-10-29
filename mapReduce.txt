@@ -34,6 +34,7 @@ mapReduce运行过程
 		3.6 整个切片的核心过程在getSplit()中完成
 		3.7 InputSplit只记录了切片的元数据信息, 比如起始位置,长度以及所在的节点列表等
 	4. 提交切片规划文件到YARN上, YARN上的MrAppMaster就可以根据切片规划文件计算开启MapTask个数
-
+CombineTextInputFormat切片机制
+	CombineTextInputFormat用于小文件过多的场景, 它可以将多个小文件从逻辑上规划到一个切片中, 将多个小文件交给一个MapTask处理.
 序列化与反序列化
 	将内存中的对象转换为字节码的过程称为序列化, 相反的过程即为反序列化
