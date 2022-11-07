@@ -58,3 +58,7 @@ CombineTextInputFormat切片机制
 		1.7+2.55 M, 2.55+3.4 M, 34+3.4 M
 序列化与反序列化
 	将内存中的对象转换为字节码的过程称为序列化, 相反的过程即为反序列化
+
+环形缓冲区写出的数据会进行分区, 不同分区的数据进入到不同的reduce
+一个maptask会产生多个分区,并对分区编号, reducetask从多个maptask中拉取相同编号分区的数据.
+reducetask将数据处理之后通过OutPutFormat格式输出到文件(一个reducetask输出一个结果文件).
