@@ -68,3 +68,15 @@ CombineTextInputFormat切片机制
 		如果1<ReduceTask的数量<getPartition的结果数, 则有一部分分区数据无处安防, 会报I/O错误.
 		如果ReduceTask的数量=1, 则不管MapTask端输出多少个分区文件, 最终结果都交给这一个ReduceTask, 最终只产生一个结果文件part-r-00000.
 		分区号必须从零开始, 逐一累加.
+排序
+	MapTask和ReduceTask均会对数据按照key排序, 该操作属于Hadoop的默认行为.
+
+合并
+	Combiner是MR程序中Mapper和Reducer之外的一种组件(即非默认).
+	Combiner组件的父类就是Reducer.
+	Combiner和Reducer的区别在于运行的位置.
+		Combiner是在每一个MapTask所在的节点运行.
+		Reducer是接收全局所有Mapper的输出结果.
+	combiner的意义就是对每一个MapTask的输出进行局部汇总, 以减小网络传输量.
+	Combiner的输出kv应该跟Reducer的输入kv对应起来
+	
