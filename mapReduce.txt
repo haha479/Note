@@ -68,6 +68,11 @@ CombineTextInputFormat切片机制
 		如果1<ReduceTask的数量<getPartition的结果数, 则有一部分分区数据无处安防, 会报I/O错误.
 		如果ReduceTask的数量=1, 则不管MapTask端输出多少个分区文件, 最终结果都交给这一个ReduceTask, 最终只产生一个结果文件part-r-00000.
 		分区号必须从零开始, 逐一累加.
+ReduceTask并行度决定机制
+	ReduceTask=0, 表示没有Reduce阶段, 输出文件个数和Map个数一致.
+	ReduceTask默认值就是1, 所以输出文件个数为一个.
+	如果分区数不是1, 但是ReduceTask为1, 不会执行分区过程.
+		因为在MapTask的源码中, 执行分区的前提是先判断ReduceNum个数是否大于1, 否则不执行.
 排序
 	MapTask和ReduceTask均会对数据按照key排序, 该操作属于Hadoop的默认行为.
 
