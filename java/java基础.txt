@@ -685,7 +685,7 @@ jdk8.0接口新特性
 			//遍历value集
 			for(Object obj : values){print(obj);}
 
-			3.遍历key-value
+			3.1遍历key-value
 			//获取entrySet(entrySet集合中的元素都是entry)
 			Set entrySet = map.entrySet();
 			//获取entrySet迭代器
@@ -693,9 +693,21 @@ jdk8.0接口新特性
 			//通过迭代器获取entrySet中元素
 			Object obj = iterator.next();
 			//强转为Entry
-			Mao.Entry entry = (Map.Entry) obj;
+			Map.Entry entry = (Map.Entry) obj;
 			//调用entry的方法获取key-value值
 			entry.getKey();entry.getValue()
+
+			3.2
+			//原始的HashMap遍历方法
+			//创建HashMap
+			Map<Charcter, Integer> map = new HashMap<Character, Integer>
+			//for-each遍历key-value
+			for(Map.Entry<Object, object> entry : map.entrySet()){
+				//获取key并打印
+				System.out.println(entry.getKey());
+				//获取value并打印
+				System.out.println(entry.getValue();
+			}
 
 
 			|----TreeMap：保证按照添加的key-value进行排序，实现排序遍历。
