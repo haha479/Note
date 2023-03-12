@@ -376,6 +376,20 @@ jdk8.0接口新特性
 		String类的一些常用方法
 			length(),charAt(int index),isEmpty(),toCharArray()...
 
+		String与int之间的转换
+			String转换为int(1)
+				String str = "12345";
+				int num = Integer.parseInt(str)
+			String转换为int(2)
+				String str = "12345";
+				int num = Integer.valueOf(str).intValue();
+			int转换为String(1)
+				int num = 12345;
+				String str = String.valueOf(num);
+			int转换为String(2)
+				int num = 12345;
+				String str = Integer.toString(num);
+
 		String与char[]之间的转换
 			String->char[]
 				调用String的toCharArray()方法
