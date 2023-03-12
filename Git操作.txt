@@ -15,7 +15,10 @@
 　　git config --global user.name "你的名字"
 将当前文件夹下的所有文件添加到暂存区
 	git add .
-	
+关于提交到暂存区多个命令的区别
+	git add -A  提交所有变化
+	git add -u  提交被修改(modified)和被删除(deleted)文件，不包括新文件(new)
+	git add .  提交新文件(new)和被修改(modified)文件，不包括被删除(deleted)文件
 查看工作区的修改(diff后也可跟文件名)
 	git diff
 
