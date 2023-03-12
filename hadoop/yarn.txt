@@ -49,7 +49,7 @@ Yarn常用命令
 		yarn container -status [containerId]
 	查看节点状态
 		yarn node -list -all
-	更新配置
+	更新队列配置(默认只有一个叫default的队列)
 		yarn rmadmin -refreshQueues
 	查看队列
 		yarn queue -status [QueueName]
