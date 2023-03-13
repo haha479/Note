@@ -72,3 +72,14 @@ yarn生产环境核心配置参数
 		yarn.scheduler.maximum-allocation-mb	容器最大内存, 默认8G
 		yarn.scheduler.minimum-allocation-vcores	容器最小cpu核数, 默认1个
 		yarn.scheduler.maximum-allocation-vcores	容器最大cpu核数, 默认1个
+
+任务优先级
+	提交任务时指定该任务的优先级
+		-D mapreduce.job.priority=5
+	修改正在执行的任务的优先级
+		yarn application -appId [applicationId] -updatePriority 5
+
+配置多队列的公平调度器
+
+提交任务时指定队列
+	-D mapreduce.job.queuename=[队列名]
