@@ -1,0 +1,18 @@
+配置文件参数(zoo.cfg)
+	tickTime=2000	#通信心跳时间,Zookeeper服务器于客户端心跳时间,单位毫秒
+	initLimit=10	#Leader和Follower初始连接时能容忍的最多心跳数(tickTime的数量)
+					初始连接时所花费的时间不能超过initLimit*tickTime
+	syncLimit=5		#Leader和Follower之间通信时间如果超过syncLimit*tickTime,
+					则Leader认为Follower死掉,从服务器列表中删除Follower
+	dataDir			#保存Zookeeper数据的目录
+	clientPort=2181	#客户端连接端口
+
+	集群配置
+		server.A=B:C:D
+		例: server.2=hadoop102:2888:3888
+		
+		A: 是一个数字,表示这是第几号服务器,写在dataDir/myid文件中(myid文件需要新建)
+		B: 服务器地址
+		C: 是这个服务器Follower于集群中的Leader服务器交换信息的端口
+		D: 是万一集群中的Leader服务器挂了,需要一个端口来重新进行选举出新的Leader,
+			该端口就是用来执行选举时服务器相互通信的端口
