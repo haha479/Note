@@ -80,3 +80,16 @@ hadoop常用配置文件
 	配置yarn-site.xml文件
 	重启yarn, history服务器
 
+高可用集群
+	高可用集群HA分成各个组件的HA机制:HDFS的HA和YARN的HA
+
+	HDFS的HA
+	通过配置多个NameNode实现在集群中对NameNode的热备来解决单点故障问题。
+	如果机器崩溃或机器需要升级维护,这时可通过此种方法将NameNode很快切换到另外一台机器。
+	运行时,只有一台nn是active,其他所有都是standy的,即备用的。
+	2nn在HA架构中并不存在,定期合并fsimage和edits的任务由standy的nn来完成。
+
+	
+	保证多台NameNode的数据一致
+	a.Fsimage:让一台nn生成数据,其他机器nn同步
+	b.Edits:需要引进新的模块JournalNode来保证edits文件的数据一致性
