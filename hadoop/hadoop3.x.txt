@@ -86,10 +86,41 @@ hadoop常用配置文件
 	HDFS的HA
 	通过配置多个NameNode实现在集群中对NameNode的热备来解决单点故障问题。
 	如果机器崩溃或机器需要升级维护,这时可通过此种方法将NameNode很快切换到另外一台机器。
-	运行时,只有一台nn是active,其他所有都是standy的,即备用的。
-	2nn在HA架构中并不存在,定期合并fsimage和edits的任务由standy的nn来完成。
+	运行时,只有一台nn是active,其他所有都是standby的,即备用的。
+	2nn在HA架构中并不存在,定期合并fsimage和edits的任务由standby的nn来完成。
 
 	
 	保证多台NameNode的数据一致
 	a.Fsimage:让一台nn生成数据,其他机器nn同步
 	b.Edits:需要引进新的模块JournalNode来保证edits文件的数据一致性
+
+	启动hdfs高可用集群
+		配置core-site.xml,hdfs-site.xml文件
+		开启journalnode进程
+			hdfs --daemon start journalnode
+		格式化namenode(active和standby节点启动)
+			hdfs --daemon start namenode
+		启动namenode(active和standby节点中启动)
+			hdfs --daemon start namenode
+
+	手动切换active节点
+		要求集群中无active节点,且当前active节点namenode进程存在才可执行,否则可能会存在多个active节点,导致脑裂
+		hdfs haadmin -transitionToActive namenode节点名称(配置在hdfs-site.xml中)
+
+	查看节点是否为active
+		hdfs haadmin -getServiceState namenode节点名称
+
+	hdfs高可用自动模式
+		自动故障转移工作机制
+			增加两个新组件:ZooKeeper和ZKFailoverController(ZKFC)进程。
+			zookeeper:监控各节点状态,提供故障检测,活动NameNode选举
+			zkfc:只有namenode才有zkfc进程,每个namenode各一个.
+			用于监测节点中namenode状态,若节点无法通信,防止active节点假死则会通知另外节点强行杀死activenamenode以防脑裂
+
+		配置HDFS-HA自动故障转移
+			启动zookeeper
+
+			初始化HA在Zookeeper中状态
+				hdfs zkfc -formatZK
+			启动HDFS服务
+				start-dfs.sh
