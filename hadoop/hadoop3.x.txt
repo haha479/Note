@@ -125,5 +125,6 @@ hadoop常用配置文件
 			启动HDFS服务
 				start-dfs.sh
 			测试:关闭Active节点的NameNode进程,查看集群是否选举出新的Active节点.
-			在测试过程中,关闭Active节点的NameNode进程后,网页端查看发现集群并为选举出新Active节点。
-			每台NameNode节点上安装psmisc后重新测试成功
+			在测试过程中,关闭Active节点的NameNode进程后,网页端查看发现集群并未选举出新Active节点。
+			每台NameNode节点上安装psmisc后重新测试成功,即集群能够自动选举出Active节点.
+			初次判断:待选举Active节点无法强制杀死当前Active节点NameNode进程,可能需要借助psmisc工具包(包中含有杀死进程的工具).
