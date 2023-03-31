@@ -124,3 +124,6 @@ hadoop常用配置文件
 				hdfs zkfc -formatZK
 			启动HDFS服务
 				start-dfs.sh
+			测试:关闭Active节点的NameNode进程,查看集群是否选举出新的Active节点.
+			在测试过程中,关闭Active节点的NameNode进程后,网页端查看发现集群并为选举出新Active节点。
+			每台NameNode节点上安装psmisc后重新测试成功
