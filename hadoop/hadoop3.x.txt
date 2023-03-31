@@ -94,15 +94,6 @@ hadoop常用配置文件
 	a.Fsimage:让一台nn生成数据,其他机器nn同步
 	b.Edits:需要引进新的模块JournalNode来保证edits文件的数据一致性
 
-	启动hdfs高可用集群
-		配置core-site.xml,hdfs-site.xml文件
-		开启journalnode进程
-			hdfs --daemon start journalnode
-		格式化namenode(active和standby节点启动)
-			hdfs --daemon start namenode
-		启动namenode(active和standby节点中启动)
-			hdfs --daemon start namenode
-
 	手动切换active节点
 		要求集群中无active节点,且当前active节点namenode进程存在才可执行,否则可能会存在多个active节点,导致脑裂
 		hdfs haadmin -transitionToActive namenode节点名称(配置在hdfs-site.xml中)
@@ -117,12 +108,20 @@ hadoop常用配置文件
 			zkfc:只有namenode才有zkfc进程,每个namenode各一个.
 			用于监测节点中namenode状态,若节点无法通信,防止active节点假死则会通知另外节点强行杀死activenamenode以防脑裂
 
-		配置HDFS-HA自动故障转移
-			启动zookeeper
-
-			初始化HA在Zookeeper中状态
+		配置HDFS高可用集群以及自动故障转移
+			1.配置core-site.xml,hdfs-site.xml文件
+			2.在各个节点启动journalnode服务
+				hdfs --daemon start journalnode
+			3.在nn1上格式化namenode并启动(该节点nn1应该是在hdfs-site.xml中参数(dfs.ha.namenodes.mycluster)值中第一位)
+				hdfs namenode -format
+				hdfs --daemon start namenode
+			4.在除nn1节点外的节点同步nn1的namenode的元数据信息
+				hdfs namenode -bootstrapStandby
+			5.在所有节点启动zookeeper集群
+				zkServer.sh start
+			6.初始化HA在Zookeeper中状态
 				hdfs zkfc -formatZK
-			启动HDFS服务
+			7.开启HDFS所有组件
 				start-dfs.sh
 			测试:关闭Active节点的NameNode进程,查看集群是否选举出新的Active节点.
 			在测试过程中,关闭Active节点的NameNode进程后,网页端查看发现集群并未选举出新Active节点。
