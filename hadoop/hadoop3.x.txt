@@ -103,7 +103,8 @@ hadoop常用配置文件
 
 	hdfs高可用自动模式
 		自动故障转移工作机制
-			增加两个新组件:ZooKeeper和ZKFailoverController(ZKFC)进程。
+			增加新组件:JournalNode,ZooKeeper和ZKFailoverController(ZKFC)进程。
+			journalnode:用于Active节点与Standby节点之间的通信,Standby节点利用该组件同步Active节点的edit log.
 			zookeeper:监控各节点状态,提供故障检测,活动NameNode选举
 			zkfc:只有namenode才有zkfc进程,每个namenode各一个.
 			用于监测节点中namenode状态,若节点无法通信,防止active节点假死则会通知另外节点强行杀死activenamenode以防脑裂
