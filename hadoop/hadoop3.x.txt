@@ -127,3 +127,16 @@ hadoop常用配置文件
 			在测试过程中,关闭Active节点的NameNode进程后,网页端查看发现集群并未选举出新Active节点。
 			每台NameNode节点上安装psmisc后重新测试成功,即集群能够自动选举出Active节点.
 			初次判断:待选举Active节点无法强制杀死当前Active节点NameNode进程,可能需要借助psmisc工具包(包中含有杀死进程的工具).
+
+	yarn高可用自动模式
+		首先开启的ResourceManager节点会向zookeeper注册一个临时节点作为Active存在,其他RM作为Standby存在.
+		若Active节点宕机,则zookeeper中临时节点数据将自动删除,Standby节点检测到zookeeper中节点变化后,将自己切换为Active节点.
+		RM会将当前的所有计算程序的状态存储在zk中,其他RM上位后会去读取,然后继续运行.
+
+		步骤:
+		配置yarn-site.xml
+		启动yarn
+			start-yarn.sh
+
+		查看服务状态(即为Active或Standby)
+			yarn rmadmin -getServiceState (ResourceManager名称)
