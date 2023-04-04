@@ -1,0 +1,143 @@
+安装jdk8.0
+	下载jar包(jdk-8u144-linux-x64.tar.gz)
+	解压至目录/opt/module/下
+	tar -zxvf jdk-8u144-linux-x64.tar.gz -C /opt/module
+
+	添加环境变量
+	在/etc/profile.d/目录下新建存放环境变量的.sh文件
+	vi /etc/profile.d/my_env.sh
+	添加内容
+	#JAVA_HOME
+	export JAVA_HOME=/opt/module/jdk1.8.0_144
+	export PATH=$PATH:$JAVA_HOME/bin
+	使脚本重新生效
+	source /etc/profile
+安装hadoop3.1.3
+	下载hadoop源码包(hadoop-3.1.3.tar.gz)
+	解压至目录/opt/module/下
+	tar -zxvf hadoop-3.1.3.tar.gz -C /opt/module
+
+	添加环境变量
+	修改/etc/profile.d/my_env.sh文件(安装jdk时已创建的文件)
+	vi /etc/profile.d/my_env.sh
+	添加内容
+	#HADOOP_HOME
+	export HADOOP_HOME=/opt/module/hadoop-3.1.3
+	export PATH=$PATH:$HADOOP_HOME/bin
+	export PATH=$PATH:$HADOOP_HOME/sbin
+	使脚本重新生效
+	source /etc/profile
+hadoop运行模式
+	本地运行模式：数据存储在本地
+	伪分布式：数据存储在HDFS
+	完全分布式：多台真实存在的服务器工作，并且数据存储在HDFS
+hadoop常用端口号
+	hadoop3.x
+		HDFS NameNode 内部通讯端口: 8020/9000/9820
+		HDFS NameNode 对用户的查询端口:9870
+		Yarn查看任务运行情况:8088
+		历史服务器:19888
+	hadoop2.x
+		HDFS NameNode 内部通讯端口: 8020/9000
+		HDFS NameNode 对用户的查询端口:50070
+		Yarn查看任务运行情况:8088
+		历史服务器:19888
+hadoop常用配置文件
+	hadoop3.x core-site.xml hdfs-site.xml yarn-site.xml mapred-site.xml workers
+	hadoop2.x core-site.xml hdfs-site.xml yarn-site.xml mapred-site.xml slaves
+
+本地运行模式官方wordcount案例(统计一个文件中每个词出现的次数)
+	hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.3.jar wordcount wcinput/ wcoutput
+	//wcinput为输入目录, 该目录中有待统计的文件, wcoutput为输出目录, 该目录事先不能存在
+	//...examples-3.1...为官方工具, wordcount为统计的命令
+
+起集群
+	配置文件etc/hadoop/core-site.xml, hdfs-site.xml, mapred-site.xml, yarn-site.xml
+	格式化namenode
+		格式化会产生新的集群id,如果是重新格式化namenode,要先停止namenode和datanode进程,
+		并且删除所有机器的data和logs目录
+		hdfs namenode -format
+	启动HDFS
+		sbin/start-dfs.sh
+	在配置了ResourceManager的节点上启动YARN
+		sbin/start-yarn.sh
+	在workers文件配置工作节点
+		在以下文件中添加集群服务器地址(不要有多余空行和换行)
+		hadoop/etc/hadoop/workers
+	jps可查看启动的组件进程
+对于HDFS, yarn的启动, 在sbin文件中都有脚本文件可以运行
+启动历史服务器
+	配置mapred-site.xml文件, 配置指定历史服务器端地址和历史服务器web端地址
+	开启历史服务器
+		mapred --daemon start historyserver
+单个服务组件的启动或停止
+	HDFS组件
+		hdfs --daemon start/stop namenode/datanode/secondarynamenode
+	YARN
+		yarn --daemon start/stop resourcemanager/nodemanager
+配置日志的聚集
+	#将所有集群服务器的日志聚集到HDFS, 方便用户查看
+	配置yarn-site.xml文件
+	重启yarn, history服务器
+
+高可用集群
+	高可用集群HA分成各个组件的HA机制:HDFS的HA和YARN的HA
+
+	HDFS的HA
+	通过配置多个NameNode实现在集群中对NameNode的热备来解决单点故障问题。
+	如果机器崩溃或机器需要升级维护,这时可通过此种方法将NameNode很快切换到另外一台机器。
+	运行时,只有一台nn是active,其他所有都是standby的,即备用的。
+	2nn在HA架构中并不存在,定期合并fsimage和edits的任务由standby的nn来完成。
+
+	
+	保证多台NameNode的数据一致
+	a.Fsimage:让一台nn生成数据,其他机器nn同步
+	b.Edits:需要引进新的模块JournalNode来保证edits文件的数据一致性
+
+	手动切换active节点
+		要求集群中无active节点,且当前active节点namenode进程存在才可执行,否则可能会存在多个active节点,导致脑裂
+		hdfs haadmin -transitionToActive namenode节点名称(配置在hdfs-site.xml中)
+
+	查看节点是否为active
+		hdfs haadmin -getServiceState namenode节点名称
+
+	hdfs高可用自动模式
+		自动故障转移工作机制
+			增加新组件:JournalNode,ZooKeeper和ZKFailoverController(ZKFC)进程。
+			journalnode:用于Active节点与Standby节点之间的通信,Standby节点利用该组件同步Active节点的edit log.
+			zookeeper:监控各节点状态,提供故障检测,活动NameNode选举
+			zkfc:只有namenode才有zkfc进程,每个namenode各一个.
+			用于监测节点中namenode状态,若节点无法通信,防止active节点假死则会通知另外节点强行杀死activenamenode以防脑裂
+
+		配置HDFS高可用集群以及自动故障转移
+			1.配置core-site.xml,hdfs-site.xml文件
+			2.在各个节点启动journalnode服务
+				hdfs --daemon start journalnode
+			3.在nn1上格式化namenode并启动(该节点nn1应该是在hdfs-site.xml中参数(dfs.ha.namenodes.mycluster)值中第一位)
+				hdfs namenode -format
+				hdfs --daemon start namenode
+			4.在除nn1节点外的节点同步nn1的namenode的元数据信息
+				hdfs namenode -bootstrapStandby
+			5.在所有节点启动zookeeper集群
+				zkServer.sh start
+			6.初始化HA在Zookeeper中状态
+				hdfs zkfc -formatZK
+			7.开启HDFS所有组件
+				start-dfs.sh
+			测试:关闭Active节点的NameNode进程,查看集群是否选举出新的Active节点.
+			在测试过程中,关闭Active节点的NameNode进程后,网页端查看发现集群并未选举出新Active节点。
+			每台NameNode节点上安装psmisc后重新测试成功,即集群能够自动选举出Active节点.
+			初次判断:待选举Active节点无法强制杀死当前Active节点NameNode进程,可能需要借助psmisc工具包(包中含有杀死进程的工具).
+
+	yarn高可用自动模式
+		首先开启的ResourceManager节点会向zookeeper注册一个临时节点作为Active存在,其他RM作为Standby存在.
+		若Active节点宕机,则zookeeper中临时节点数据将自动删除,Standby节点检测到zookeeper中节点变化后,将自己切换为Active节点.
+		RM会将当前的所有计算程序的状态存储在zk中,其他RM上位后会去读取,然后继续运行.
+
+		步骤:
+		配置yarn-site.xml
+		启动yarn
+			start-yarn.sh
+
+		查看服务状态(即为Active或Standby)
+			yarn rmadmin -getServiceState (ResourceManager名称)
