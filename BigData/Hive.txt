@@ -12,3 +12,11 @@ Hive概念
 	4.配置conf/hive-site.xml文件(需新建)
 	5.初始化源数据库
 		bin/schematool -dbType mysql -initSchema -verbose
+
+hiveserver2
+	Hive的hiveserver2服务的作用时提供jdbc/odbc接口,为用户提供远程访问Hive数据的功能.
+	部署:
+	1.配置hadoop中core-site.xml
+	2.配置hive中hive-site.xml
+	3.启动hiveserver2
+		nohup hiveserver2 1>/dev/null 2>&1 & #非阻塞运行
