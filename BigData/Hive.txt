@@ -19,4 +19,14 @@ hiveserver2
 	1.配置hadoop中core-site.xml
 	2.配置hive中hive-site.xml
 	3.启动hiveserver2
-		nohup hiveserver2 1>/dev/null 2>&1 & #非阻塞运行
+		nohup hive --service hiveserver2 1>/dev/null 2>&1 & #非阻塞运行
+
+metastore服务
+	hive的metastore服务的作用是为Hive CLI或Hiveserver2提供元数据访问接口,无需为每个客户端配置元数据库身份验证(不负责存储元数据)
+	metastore独立服务模式
+		Hive CLI或Hiveserver2通过metastore访问元数据库
+	配置
+		metastore服务端配置hive-site.xml文件, 内容为jdbc连接的URL,Driver,Usernmane,Password
+		启动metastore服务
+			nohup hive --service metastore &
+		metastore客户端配置hive-site.xml文件, 内容为指定metastore服务的地址与端口号
