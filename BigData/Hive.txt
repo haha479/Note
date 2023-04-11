@@ -23,6 +23,7 @@ hiveserver2
 
 metastore服务
 	hive的metastore服务的作用是为Hive CLI或Hiveserver2提供元数据访问接口,无需为每个客户端配置元数据库身份验证(不负责存储元数据)
+	metastore默认为嵌入式,即metastore嵌入在客户端中, 需要在客户端配置jdbc4个参数.
 	metastore独立服务模式
 		Hive CLI或Hiveserver2通过metastore访问元数据库
 	配置
