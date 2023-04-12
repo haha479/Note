@@ -21,3 +21,28 @@ MVCC机制:
 	UPDATE
 		InnoDB为插入一行新纪录,保存当前系统版本号作为行版本号,同时保存当前系统版本号到原来的
 		行作为行删除标识
+
+
+幻读侧重于事务中查询出现了幻行,即当前事务受其他事务插入数据的影响,导致查询数据不一致.
+
+读取压缩表时只会解压要读取的行,压缩表只读.
+
+转换表的引擎的方法
+	1.ALTER TABLE mytable ENGINE = InnoDB;
+		可能需要执行很长的时间
+	2.导入与导出
+		使用mysqldump工具将数据导出到文件,然后修改文件中CREATE TABLE语句的存储引擎选项.	
+	3.创建与查询
+		先创建新引擎表,再利用insert into语法导入数据
+				INSERT INTO NewTableName SELECT * FROM Old_Table_Name
+
+慢查询日志
+	记录查询语句执行时间,响应时间单位为微秒级,精度高,日志可能消耗大量磁盘空间.一般在业务高峰期开启.
+
+单条查询语句剖析
+	1.show profile
+		展示sql语句的耗时信息.
+		实际数据记录于数据库INFORMATION_SCHEMA中的profiling表中(可以将数据格式化并按时间逆序排序输出).
+
+	2.show status
+		返回语句的计数器.
