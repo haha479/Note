@@ -32,7 +32,7 @@ metastore服务
 	metastore独立服务模式
 		Hive CLI或Hiveserver2通过metastore访问元数据库
 	配置
-		metastore服务端配置hive-site.xml文件, 内容为jdbc连接的URL,Driver,Usernmane,Password
+		metastore服务端配置hive-site.xml文件(一台计划节点配置), 内容为jdbc连接的URL,Driver,Usernmane,Password
 		启动metastore服务
 			nohup hive --service metastore &
 		metastore客户端配置hive-site.xml文件, 内容为指定metastore服务的地址与端口号
