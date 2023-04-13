@@ -16,10 +16,15 @@ Hive概念
 hiveserver2
 	Hive的hiveserver2服务的作用时提供jdbc/odbc接口,为用户提供远程访问Hive数据的功能.
 	部署:
-	1.配置hadoop中core-site.xml
+	1.配置hadoop中core-site.xml并分发给集群所有节点
 	2.配置hive中hive-site.xml
 	3.启动hiveserver2
-		nohup hive --service hiveserver2 1>/dev/null 2>&1 & #非阻塞运行
+		nohup hive --service hiveserver2 1>/dev/null 2>&1 &    #非阻塞运行
+
+	测试:
+		使用hive中自带客户端beeline测试连接
+		在任一节点中使用beeline测试连接
+			beeline -u jdbc:hive2://hadoop102:10000 -n self479
 
 metastore服务
 	hive的metastore服务的作用是为Hive CLI或Hiveserver2提供元数据访问接口,无需为每个客户端配置元数据库身份验证(不负责存储元数据)
