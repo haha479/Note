@@ -36,3 +36,25 @@ metastore服务
 		启动metastore服务
 			nohup hive --service metastore &
 		metastore客户端配置hive-site.xml文件, 内容为指定metastore服务的地址与端口号
+
+非交互式运行 : hive -e "sql语句"
+				hive  -f  sql文件
+
+参数配置的方式
+	1.修改配置文件
+		conf/hive-default.xml已经过时, 配置无效.
+		建议配置写在con/hive-site.xml中
+	2.命令行参数方式
+		仅本次进程启动有效
+		如:hive -hiveconf mapreduce.job.reduces=10;
+	3.参数声明方式
+		在hive交互式客户端中输入命令(当前客户端有效)
+		如获取:set mapreduce.job.reduces
+		设置:set mapreduce.job.reduces
+	优先级:配置文件<命令行参数<参数声明
+
+修改log保存路径
+	修改conf/hive-log4j2.properties文件中参数"property.hive.log.dir"
+
+修改hive堆内存
+	修改con/hive-env.sh中参数export HADOOP_HEAPSIZE
