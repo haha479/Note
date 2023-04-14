@@ -58,3 +58,25 @@ metastore服务
 
 修改hive堆内存
 	修改con/hive-env.sh中参数export HADOOP_HEAPSIZE
+
+
+DDL
+	创建数据库
+		create database [if not exists] database_name
+		[comment 注释]
+		[location hdfs_path]
+		[with dbproperties (property_name=property_value, ...)]
+	查看数据库
+		show databases;
+	查看某个数据库相关信息
+		describe database [extended] db_name; 
+		#extended将展示更为详细的信息,包括在建库时设置的property.
+	修改数据库
+		alter database database_name 
+		set (dbproperties/location/owner user) (property_name=../hdfs_path/user_name)
+	删除数据库
+		drop database [if exists] database_name [restrict|cascade]
+		restrict:严格模式(默认),若数据库不为空,则删除失败
+		cascade:级联模式,若数据库不为空,则将库中的表一并删除
+	切换当前数据库
+		use database_name
