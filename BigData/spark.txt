@@ -1,0 +1,12 @@
+spark是一种基于内存的快速、通用、可扩展的大数据分析计算引擎
+
+配置IDEA中配置scala
+	1.下载scala插件
+		到IDEA插件官网下载与IDEA版本对应的scala插件到本地(一定要找对应的版本)
+	2.安装插件
+		file->setting->plugins,点击设置,点击install plugin from disk,选中本地的scala插件文件
+	3.关联项目与scala包
+		a.file->Project Structure->Global Libraries, 点击"+"->Scala SDK->Browser, 
+		找到并选中本地的scala完整软件包(需提前在scala官网下载).
+		b.右键项目,点击Add Framework Support,勾选scala
+
