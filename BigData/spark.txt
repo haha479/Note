@@ -10,3 +10,14 @@ spark是一种基于内存的快速、通用、可扩展的大数据分析计算
 		找到并选中本地的scala完整软件包(需提前在scala官网下载).
 		b.右键项目,点击Add Framework Support,勾选scala
 
+spark运行模式
+	1.Local(本地)模式
+	2.Standalone(独立)模式
+	3.Yarn模式
+		1.修改配置文件yarn-site.xml
+		2.修改conf/spark-env.sh
+		3.配置历史服务器
+			修改spark-default.conf文件
+			修改spark-env.sh文件
+			启动历史服务
+				sbin/start-history-server.sh
