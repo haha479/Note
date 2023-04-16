@@ -43,7 +43,7 @@ metastore服务
 参数配置的方式
 	1.修改配置文件
 		conf/hive-default.xml已经过时, 配置无效.
-		建议配置写在con/hive-site.xml中
+		建议配置写在conf/hive-site.xml中
 	2.命令行参数方式
 		仅本次进程启动有效
 		如:hive -hiveconf mapreduce.job.reduces=10;
