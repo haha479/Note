@@ -52,7 +52,7 @@ hadoop常用配置文件
 	//...examples-3.1...为官方工具, wordcount为统计的命令
 
 起集群
-	配置文件etc/hadoop/core-site.xml, hdfs-site.xml, mapred-site.xml, yarn-site.xml
+	配置文件etc/hadoop/core-site.xml, hdfs-site.xml, mapred-site.xml, yarn-site.xml, workers
 	格式化namenode
 		格式化会产生新的集群id,如果是重新格式化namenode,要先停止namenode和datanode进程,
 		并且删除所有机器的data和logs目录
@@ -110,7 +110,7 @@ hadoop常用配置文件
 			用于监测节点中namenode状态,若节点无法通信,防止active节点假死则会通知另外节点强行杀死activenamenode以防脑裂
 
 		配置HDFS高可用集群以及自动故障转移
-			1.配置core-site.xml,hdfs-site.xml文件
+			1.配置core-site.xml,hdfs-site.xml, workers文件
 			2.在各个节点启动journalnode服务
 				hdfs --daemon start journalnode
 			3.在nn1上格式化namenode并启动(该节点nn1应该是在hdfs-site.xml中参数(dfs.ha.namenodes.mycluster)值中第一位)
