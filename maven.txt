@@ -1,5 +1,12 @@
-mvn compile #编译
-mvn clean   #清理
-mvn test    #测试
-mvn package #打包
-mvn install #安装到本地仓库
+maven的安装配置
+	1.下载maven包并解压.
+	2.配置conf/settings.xml, 配置本地仓库目录, 远程仓库地址.
+	3.在IDEA中配置: File->Settings->maven, 分别配置maven安装目录, settings.xml, 本地仓库目录.
+	
+
+maven的命令
+	mvn compile #编译
+	mvn clean   #清理
+	mvn test    #测试
+	mvn package #打包
+	mvn install #安装到本地仓库
