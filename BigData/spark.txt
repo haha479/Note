@@ -86,5 +86,5 @@ RDD
 			rightOutJoin(): 类似于sql中的右外连接.
 			cogroup(): 类似于group+join
 		2.行动算子: 触发任务的调度和作业的执行
- 
+			collect()
 
