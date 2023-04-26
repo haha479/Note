@@ -86,5 +86,17 @@ RDD
 			rightOutJoin(): 类似于sql中的右外连接.
 			cogroup(): 类似于group+join
 		2.行动算子: 触发任务的调度和作业的执行
-			collect()
-
+			reduce(): 两两聚合进行计算, 返回结果值, 而不是RDD.
+			collect(): 将不同分区的数据按照分区顺序采集到Driver端内存中, 形成数组.
+			count(): 返回RDD中数据的个数.
+			first(): 返回RDD中第一个数据.
+			take(): 接受一个参数n, 获取n个数据
+			takeOrdered(): 将数据排序后(默认升序), 取前n个数据.
+			aggregate(): 类似于aggregateBykey, 不同的是aggregate会返回具体的结果, 且第一个参数(初始值)不仅会参与分区内计算, 还会参与分区间计算.
+			fold(): aggregate的简化, 当分区内与分区间的计算一致时使用该算子
+			countValue(): 用于统计数据源中各个数据出现的次数, 返回一个Map.
+			countByKey(): 用于统计数据源中每种key出现的次数.
+			saveAsTextFile(): 将RDD保存成text文件
+			saveAsObjectFile(): 将RDD序列化成对象保存到文件
+			saveAsSequenceFile(): 将RDD保存成Sequencefile文件
+			foreach(): 分布式遍历数据源中的数据.
