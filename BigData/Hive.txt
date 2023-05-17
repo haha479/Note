@@ -3,14 +3,14 @@ Hive概念
 	1.Hive中每张表的数据存储在HDFS
 	2.Hive分析数据底层的实现是MapReduce(也可配置为Spark或Tez)
 	3.执行程序运行在Yarn上
-	4.Hive将元数据存储在数据库中
+	4.Hive将元数据存储在数据库中(元数据: 表名到路径的映射)
 
 配置Hive元数据存储到mysql
 	1.mysql中创建数据库metastore
 	2.拷贝mysql-connector-java-...jar至hive/lib
 	3.删除原有的元数据库derby产生的数据,在hive/metastore_db(初始化时指定的数据库)
 	4.配置conf/hive-site.xml文件(需新建)
-	5.初始化源数据库
+	5.初始化元数据库
 		bin/schematool -dbType mysql -initSchema -verbose
 
 hiveserver2
