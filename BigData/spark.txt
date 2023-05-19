@@ -154,3 +154,30 @@ SparkSQL
 
 	RDD, DataFrame, DataSet三者之间的转换, 从左向右, 包装数据.从右向左, 拆开类型, 拿出数据.
 		转换时需要引入隐式转换规则: import spark.implicits._ (这里的spark是指创建的SparkSession对象)
+
+	数据的加载和保存
+		SparkSQL默认读取和保存的文件格式为parquet(列式存储格式)
+
+		spark.read.load("path")默认加载的为parquet格式文件(否则报错).
+		spark.read.format([json,jdbc,csv..]).load("path").option()加载指定格式的文件,
+		option:指定额外的选项,例如读取jdbc数据时就需要指定用户名密码等.
+
+		df.write.save("path")将数据保存为parquet格式的文件
+		df.write.format([json,jdbc,csv..]).save("path").option()保存为指定格式的文件
+
+		对于DataFrame创建一个临时表(作用域为session)或全局表(作用域为应用), 之后可以使用sql语句查询表数据.
+			df.createOrReplaceTempView("表名") // 临时
+			df.createGlobalTempView("表名") // 全局
+
+		连接mysql读取或写入数据
+			多个option指定jdbc参数
+
+		连接hive
+			将hive-site.xml拷贝到conf/下
+			将mysql驱动ysql-connector-java-...jar拷贝到jars/下
+			若访问不到hdfs, 则需要把core-site.xml和hdfs-site.xml拷贝到conf/下
+
+			IDEA开发环境下使用SparkSQL连接hive
+				1.拷贝hive-site.xml,core-site,hdfs-site.xml文件到target/classes/下
+				2.启用hive的支持(SparkSession.enableHiveSupport())
+				3.pom中增加对应的依赖关系(包含MySQL)
