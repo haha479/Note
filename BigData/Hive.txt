@@ -14,7 +14,7 @@ Hive概念
 		bin/schematool -dbType mysql -initSchema -verbose
 
 hiveserver2
-	Hive的hiveserver2服务的作用时提供jdbc/odbc接口,为用户提供远程访问Hive数据的功能.
+	Hive的hiveserver2服务的作用是提供jdbc/odbc接口,为用户提供远程访问Hive数据的功能.
 	部署:
 	1.配置hadoop中core-site.xml并分发给集群所有节点
 	2.配置hive中hive-site.xml
@@ -59,7 +59,12 @@ metastore服务
 修改hive堆内存
 	修改con/hive-env.sh中参数export HADOOP_HEAPSIZE
 
+hive on spark
+	上传spark纯净的jar包目录至hdfs
+		hdfs dfs -put spark/jars/* /spark/jars/  (/spark/jars/在hdfs中需要事先存在)
 
+	修改hive-site.xml文件
+	
 DDL
 	创建数据库
 		create database [if not exists] database_name
