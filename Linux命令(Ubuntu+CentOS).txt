@@ -5,6 +5,9 @@
 	下载yum源配置文件, 放入/etc/yum.repos.d, 下载完成后重命名为:CentOS-Base.repo
 		wget 源URL
 
+	清除依赖关系
+		yum clean all
+
 	生成缓存
 		yum makecache
 
