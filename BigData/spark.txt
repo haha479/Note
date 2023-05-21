@@ -181,3 +181,43 @@ SparkSQL
 				1.拷贝hive-site.xml,core-site,hdfs-site.xml文件到target/classes/下
 				2.启用hive的支持(SparkSession.enableHiveSupport())
 				3.pom中增加对应的依赖关系(包含MySQL)
+
+
+SparkStreaming
+	SparkStreaming用于流式数据的处理.
+	SparkStreaming使用离散化流(discretized stream)作为抽象表示,叫作DStream. 
+	DStream是随时间推移而收到的数据的序列, 在内部, 每个时间区间收到的数据(采集器采集到的数据)都作为RDD存在, 而DStream是由这些RDD所组成的序列(因此得名“离散化”), 并发往Driver.
+	所以简单来讲, DStream就是对RDD在实时数据处理场景的一种封装。
+
+	自定义数据源
+		1. 继承Receiver, 定义泛型(采集到数据的类型), 传递参数
+		2. 重写方法(onStart, onStop)
+
+	Dstream转化
+		无状态转换操作
+			无状态数据操作, 只对当前的采集周期内的数据进行处理.把简单的RDD转换操作应用到每个批次上, 也就是转换Dstream中的每一个RDD.
+			无状态转换操作有: map, flatMap, filter, repartition, reduceByKey, groupByKey..
+			例如: reduceByKey会归约每个时间区间中的数据, 但不会归约不同区间之间的数据.
+			transform: 可以将底层RDD获取到后进行操作
+
+		有状态转换操作
+			使用有状态转换操作时, 需要设定检查点路径.
+
+			updateStateByKey: 根据key对数据的状态进行更新, 传递两个参数, 
+			第一个值表示相同的key的value数据
+			第二个值表示缓存区相同key的value数据
+
+			窗口操作
+				Dstream.window(窗口大小, 滑动步长)
+
+		Dstream输出操作
+			foreachRDD(func): 遍历Dstream中的每一个RDD并且执行func函数.
+
+		关闭采集器
+			//需要创建新的线程, 将关闭操作放置于线程中.而且需要在第三方程序中增加关闭状态(控制内部程序关闭)
+			// stopGracefully: 优雅的关闭.计算节点不再接收新的数据, 而是将现有的数据处理完毕, 然后关闭
+			ssc.stop(stopSparkContext=true, stopGracefully=true)
+
+
+			恢复数据
+				StreamingContext.getActiveOrCreate
