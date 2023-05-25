@@ -46,11 +46,17 @@ $mysql的介绍
 	2、linux下
 	systemctl start 服务名
 	systemctl stop 服务名
-五、mysql服务端的登陆和退出
 
+五、mysql服务端的登陆和退出
 	登录: mysql [-h主机名 -P端口号] -u用户名 -p[密码]
 	退出: exit或ctrl+C
+	
+六、mysql的数据导入与导出
+	导入到数据库(执行sql文件, 也可在mysql客户端中使用source命令)
+		mysql -u root -p 数据库名 -e "source sql文件.sql"
 
+	导出数据库到本地sql文件
+		mysqldump –u 用户名 –p 数据库名 > 导出目录/bak.sql;
 
 #DQL语言
 $基础查询
