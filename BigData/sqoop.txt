@@ -2,6 +2,9 @@ sqoop
 	sql + hadoop, 用于数据库与hadoop之间的数据传递.
 	底层是将导入或导出的命令翻译成mapreduce程序实现.
 
+安装
+	解压, 配置sqoop-env.sh文件.
+
 测试是否可连接mysql数据库
 	打印服务下的所有database名
 		bin/sqoop list-databases --connect jdbc:mysql://主机名:3306/ --username 用户名 --password 密码
@@ -9,43 +12,24 @@ sqoop
 数据的导入导出有很多复杂的参数, 以下只列举了常用的参数.
 
 导入数据
-	导入指: 从非大数据集群(RDBMS)向大数据集群(HDFS, HIVE, HBASE)中传输数据, 使用import 关键字.
+	导入指: 从非大数据集群(RDBMS)向大数据集群(HDFS, HIVE, HBASE)中传输数据, 使用import关键字.
 
-	RDBMS到HDFS
-
-	导入表(使用import-all-tables导入所有表)
-		bin/sqoop import \
-		--connect jdbc:mysql://hadoop102:3306/数据库名 \
-		--username 用户名 \
+	RDBMS到HDFS/HIVE(只列举了部分常用参数,根据实际情况选择)
+		bin/sqoop import[/import-all-tables] \ #import-all-tables可以导入数据库中所有表
+		--connect jdbc:mysql://主机:3306/数据库 \
+		--username 用户 \
 		--password 密码 \
-		--table 表名 \
-		--target-dir HDFS路径 \
+		--table 表名 \ #导入数据库中指定的表
+		--columns 列名1,列名2 \ #导入表中指定的列,不要有空格
+		--target-dir HDFS路径 \ #导入到HDFS时指定的路径
 		--delete-target-dir \ #若HDFS路径存在则删除再创建
-		--num-mappers 1 \
-		--fields-terminated-by "\t" #文件分隔符
-	导入指定列
-		 bin/sqoop import \
-		--connect jdbc:mysql://hadoop102:3306/数据库名 \
-		--username 用户名 \
-		--password 密码 \
-		--target-dir HDFS路径 \
-		--delete-target-dir \ 
-		--num-mappers 1 \
-		--fields-terminated-by "\t" \
-		--columns 列名1,列名2 \
-		--table 表名
-
-	RDBMS到HIVE
-		 bin/sqoop import \
-		--connect jdbc:mysql://hadoop102:3306/数据库名 \
-		--username 用户名 \
-		--password 密码 \
-		--table 数据库名 \
-		--num-mappers 1 \
-		--hive-import \
-		--fields-terminated-by "\t" \
-		--hive-overwrite \
-		--hive-table hive数据库.表名
+		--num-mappers 1 \ #启动n个map来并行导入数据, 默认4个, 若导入的关系数据库中没有设置主键, 则其值只能为1,不然报错.
+		--fields-terminated-by "\t" #文件中字段之间的分隔符
+		--hive-database hive数据库 #导入所有库中所有表时该参数指定hive中的目标数据库
+		--hive-table hive数据库.表名 #导入到hive中指定的表
+		--hive-overwrite \ #覆盖在hive中已经存在的数据
+		--hive-import \ #一般要加上该参数, 不然数据只会导入到临时目录中, 不会迁移到hive中
+		--outdir 路径 #生成的java文件(mapreduce)存放的路径, 默认为当前所在路径
 
 导出数据
 	导出指: 从大数据集群(HDFS, HIVE, HBASE)向非大数据集群(RDBMS)中传输数据, 使用export关键字.
@@ -53,9 +37,15 @@ sqoop
 	HIVE/HDFS 到RDBMS
 		bin/sqoop export \
 		--connect jdbc:mysql://hadoop102:3306/数据库名 \
-		--username 用户名 \
-		--password 密码 \
-		--table staff \
+		[--connect "jdbc:mysql://hadoop102:3306/数据库名?useUnicode=true&characterEncoding=utf-8" \] #导出数据乱码可这样解决
+		--username "用户名" \
+		--password "密码" \
+		--table 表名 \ #表需要提前存在
 		--num-mappers 1 \
-		--export-dir /user/hive/warehouse/test.db/staff_hive \
-		--input-fields-terminated-by "\t"
+		--export-dir HDFS路径或HIVE数据库中表的路径 \
+		--input-fields-terminated-by "\t" #该参数值对应的是HIVE中表的字段分隔符
+		--outdir 路径 #生成的java文件(mapreduce)存放的路径, 默认为当前所在路径
+
+执行脚本文件
+	bin/sqoop --options-file 脚本路径
+	脚本中不要有换行符, 且参数与参数值之间要换行.
