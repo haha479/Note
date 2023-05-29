@@ -4,7 +4,8 @@ sqoop
 
 安装
 	解压, 配置sqoop-env.sh文件.
-
+	拷贝jdbc驱动mysql-connector-java-...jar至sqoop/lib
+	
 测试是否可连接mysql数据库
 	打印服务下的所有database名
 		bin/sqoop list-databases --connect jdbc:mysql://主机名:3306/ --username 用户名 --password 密码
@@ -30,6 +31,7 @@ sqoop
 		--hive-overwrite \ #覆盖在hive中已经存在的数据
 		--hive-import \ #一般要加上该参数, 不然数据只会导入到临时目录中, 不会迁移到hive中
 		--outdir 路径 #生成的java文件(mapreduce)存放的路径, 默认为当前所在路径
+		--exclude-tables 表名 #在导入数据库所有表时, 该参数可以指定不导入的表
 
 导出数据
 	导出指: 从大数据集群(HDFS, HIVE, HBASE)向非大数据集群(RDBMS)中传输数据, 使用export关键字.
