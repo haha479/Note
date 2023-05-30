@@ -171,6 +171,24 @@ SparkSQL
 
 		连接mysql读取或写入数据
 			多个option指定jdbc参数
+			读取mysql中数据
+			spark.read.format("jdbc")
+			.option("url", "jdbc:mysql://ip:3306/数据库名")
+			.option("driver", "con.mysql.jdbc.Driver")
+			.option("user", "用户")
+			.option("password", "密码")
+			.option("dbtable", "表名")
+			.load()
+
+			往mysql中写数据
+			df.write.format("jdbc")
+			.option("url", "jdbc:mysql://ip:3306/数据库名")
+			.option("driver", "con.mysql.jdbc.Driver")
+			.option("user", "用户")
+			.option("password", "密码")
+			.option("dbtable", "表名")
+			.mode(Savemode.Append)
+			.save()
 
 		连接hive
 			将hive-site.xml拷贝到conf/下
