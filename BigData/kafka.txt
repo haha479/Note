@@ -25,3 +25,33 @@ kafka的使用场景?
 	kafka :正规的消息队列技术, 对于redis来说多了运维成本, 普遍适用于海量消息处理, 可以克服上述redis的缺点, 常用来处理日志、监控等
 
 	
+kafka安装启动配置
+	修改配置文件server.properties, 如borker.id, log.dirs, zookeeper.connect
+	分发安装包到集群
+	集群配置环境变量(集群中所有节点)
+	启动Zookeeper集群
+	集群中启动Kafka
+		bin/kafka-server-start.sh -daemon ./config/server.properties
+
+	停止kafka集群时, 先停止kafka所有节点进程, 再停止Zookeeper集群
+
+常用命令行
+	主题 bin/kafka-topics.sh 参数
+		--bootstrap-server <String: server toconnect to> 连接的 Kafka Broker 主机名称和端口号
+		--topic <String: topic> 操作的 topic 名称
+		--create 创建主题
+		--delete 删除主题
+		--alter 修改主题
+		--list 查看所有主题
+		--describe 查看主题详细描述
+		--partitions <Integer: # of partitions> 设置分区数
+		--replication-factor<Integer: replication factor> 设置分区副本
+		--config <String: name=value> 更新系统默认的配置
+
+	生产者 bin/kafka-console-producer.sh 
+		--bootstrap-server  kafka集群, 例:hadoop102:9092,hadoop103:9092
+		--topic 主题名
+	
+	消费者 bin/kafka-console-consumer.sh 
+		--bootstrap-server  hadoop102:9092,hadoop103:9092
+		--topic 主题名
