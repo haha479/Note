@@ -55,3 +55,38 @@ kafka安装启动配置
 	消费者 bin/kafka-console-consumer.sh 
 		--bootstrap-server  hadoop102:9092,hadoop103:9092
 		--topic 主题名
+
+生产者提高吞吐量(对比实际情况设置参数)
+	1. batch.size: 批次大小, 默认为16k
+	2. linger.ms: 每批次数据运输的间隔时间, 5-100ms
+	3. compression.type: 压缩的类型, 支持gzip、snappy、lz4和zstd
+	4. RecordAccumulator: 缓冲区大小
+
+数据可靠性(ACK应答级别)
+	acks=0: 生产者发送过来的数据, 不需要等待数据落盘应答
+	acks=1: 生产者发送过来的数据, Leader接收数据后应答
+	acks=-1: 生产者发送过来的数据, Leader接收数据并且同步到isr队列(包括Leader和Leader保持同步的Follower集合)里所有节点后应答
+
+配置Kafka-Eagle
+	Kafka-Eagle 框架可以监控 Kafka 集群的整体运行情况
+	1.关闭kafka集群
+	2.修改kafka目录下config/kafka-server-start.sh文件, 并分发至所有节点
+	3.解压kafka-eagle-bin-2.0.8.tar.gz文件
+	3.修改efak目录下/conf/system-config.properties文件
+	4.配置efak环境变量
+	5.启动zk, kafka
+	6.启动efak
+		bin/ke.sh start
+
+配置kafka-Kraft
+	kafka-Kraft模式不再依赖zookeeper
+	1.重新解压一份kafka安装包
+	2.修改目录下config/kraft/server.properties
+	3.分发安装包至集群所有节点
+	4.初始化集群数据目录
+		1)生成存储目录唯一ID
+			bin/kafka-storage.sh random-uuid
+		2)用生成的ID格式化kafka存储目录(集群执行)
+			bin/kafka-storage.sh format -t 生成的UUID -c 
+	5.启动kafka集群(集群执行)
+		bin/kafka-server-start.sh -daemon ./config/kraft/server.properties
