@@ -13,7 +13,28 @@ Flume主要组件为agent.
 	配置conf/log4j.properties中日志文件路径
 	删除lib/guava-11.0.2.jar
 	依据需求修改conf/flume-env.sh.template文件
-		export JAVA_OPTS="flume可以使用的最大最小内存"
+		export JAVA_OPTS="flume可以使用的最小最大堆内存"
 		
 启动flume(将flume运行日志展示到console)
 	bin/flume-ng agent -n (agent名) -c conf/ -f (agent配置文件) -Dflume.root.logger=INFO,console
+
+agent中三组件的类型(type)
+	source
+		taildir: 监控文件, 支持断点续传, 多目录
+		avro: 用于flume之间互相传输, 一般配合sink中avro使用
+		nc: 监控网络端口
+		exec: 监控文件, 不支持断点续传
+		spooling: 监控文件夹, 传输在文件夹中新创建的文件, 后续修改文件内容不做操作, 支持断点续传
+		kafka: 
+
+	channel
+		file: 基于磁盘, 适用于安全需求高的数据
+		memory: 基于内存
+		kafka: 数据存储于kafka集群, 可选三种模式(不同数据链路)
+			1. flume的source和sink
+			2. flume的source和拦截器，没有sink
+			3. flume的sink, 没有source
+	sink
+		avro
+		hdfs
+		kafka
