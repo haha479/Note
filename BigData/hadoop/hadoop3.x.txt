@@ -79,6 +79,28 @@ hadoop常用配置文件
 	#将所有集群服务器的日志聚集到HDFS, 方便用户查看
 	配置yarn-site.xml文件
 	重启yarn, history服务器
+调优
+	HDFS存储多目录
+		HDFS的DataNode节点保存数据的路径由dfs.datanode.data.dir参数决定，其默认值为file://${hadoop.tmp.dir}/dfs/data，若服务器有多个磁盘，必须对该参数进行修改
+	集群数据均衡
+		1.节点间数据均衡
+			开启数据均衡命令
+				start-balancer.sh -threshold 10
+				对于参数10，代表的是集群中各个节点的磁盘空间利用率相差不超过10%
+		2.磁盘间数据均衡
+			生成均衡计划
+				hdfs diskbalancer -plan hadoop103
+			执行均衡计划
+				hdfs diskbalancer -execute hadoop103.plan.json
+			查看当前均衡任务的执行情况
+				hdfs diskbalancer -query hadoop103
+			取消均衡任务
+				hdfs diskbalancer -cancel hadoop103.plan.json
+	参数调优
+		hdfs-site.xml中的字段dfs.namenode.handler.count
+			指定接受客户端请求的最大线程数量
+		yarn-site.xml中字段yarn.nodemanager.resource.memory-mb和yarn.scheduler.maximum-allocation-mb
+			分别表示该节点上YARN可使用的物理内存总量和单个任务可申请的最多物理内存总量, 都默认为8192MB
 
 高可用集群
 	高可用集群HA分成各个组件的HA机制:HDFS的HA和YARN的HA
