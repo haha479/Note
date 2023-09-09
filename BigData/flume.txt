@@ -8,5 +8,12 @@ Flume主要组件为agent.
 		channel: 位于Source和Sink之间用于存放Event的缓冲区
 		sink: 用于拉取channel中的数据写入到目的地(如HDFS文件系统)
 
+安装flume
+	解压文件
+	配置conf/log4j.properties中日志文件路径
+	删除lib/guava-11.0.2.jar
+	依据需求修改conf/flume-env.sh.template文件
+		export JAVA_OPTS="flume可以使用的最大最小内存"
+		
 启动flume(将flume运行日志展示到console)
 	bin/flume-ng agent -n (agent名) -c conf/ -f (agent配置文件) -Dflume.root.logger=INFO,console
