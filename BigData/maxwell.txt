@@ -1,0 +1,35 @@
+maxwell用于将关系数据库中的数据增量/全量同步至kafka或其它流处理平台中.
+工作原理是实时读取MySQL数据库的二进制日志(Binlog), 从中获取变更数据, 再将变更数据以JSON格式发生至Kafka(maxwell内部实现了kafka的生产者)等流处理平台. 可以将其看成一个从服务器, 复制主服务器中的数据
+
+mysql中binlog的三种模式
+	Statement-based：基于语句，Binlog会记录所有写操作的SQL语句，包括insert、update、delete等。
+	优点： 节省空间
+	缺点： 有可能造成数据不一致，例如insert语句中包含now()函数。
+	Row-based：基于行，Binlog会记录每次写操作后被操作行记录的变化。
+	优点：保持数据的绝对一致性。
+	缺点：占用较大空间。
+	mixed：混合模式，默认是Statement-based，如果SQL语句可能导致数据不一致，就自动切换到Row-based。
+	Maxwell要求Binlog采用Row-based模式。
+
+maxwell的安装部署(以mysql->maxwell(增量同步)->kafkaTopic为例)
+	解压安装包
+	配置/etc/my.ini文件, 配置启用binlog, 指定binlog类型以及监听的数据库
+	mysql中创建maxwell所需的元数据库(用于记录binlog同步的断点位置等)和用户(用于maxwell登录mysql)
+	赋予maxwell用户对maxwell库中所有表的操作权限
+		grant all on maxwell.* to 'maxwell'@'%';
+	赋予maxwell用户可以监控其他数据库的权限
+		grant select, replicaton client, replicaton slave on *.* to 'maxwell'@'%';
+	修改maxwell中配置文件config.properties.example(需修改为config.properties)
+
+maxwell-bootstrap
+	用于做历史数据的全量同步, 可应用于首次将mysql中业务数据全量同步至kafka中.
+	执行完以下命令后自动退出
+		bin/maxwell-bootstrap --database 被同步数据库 --table 表 --config maxwell/config.properties
+	注意: 同步后的数据, 第一条type为bootstrap-start和最后一条type为bootstrap-complete的数据, 是bootstrap开始和结束的标志, 不包含数据, 中间的type为bootstrap-insert的数据才包含数据, 在往后的数据处理中可能需要做清理.
+
+
+maxwell的启停
+	启动
+		bin/maxwell --config maxwell/config.properties --daemon
+
+	编写脚本停止(强制杀死java进程)
