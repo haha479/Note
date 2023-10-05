@@ -38,3 +38,6 @@ agent中三组件的类型(type)
 		avro
 		hdfs
 		kafka
+
+flume的配置文件中可以使用%{key}的方式调用event中header中的value.
+官网中HDFS Sink的原话: %{host} : 	Substitute value of event header named “host”. Arbitrary header names are supported
