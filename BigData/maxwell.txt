@@ -13,7 +13,7 @@ mysql中binlog的三种模式
 
 maxwell的安装部署(以mysql->maxwell(增量同步)->kafkaTopic为例)
 	解压安装包
-	配置/etc/my.ini文件, 配置启用binlog, 指定binlog类型以及监听的数据库
+	配置/etc/my.cnf文件, 配置启用binlog, 指定binlog类型以及监听的数据库
 	mysql中创建maxwell所需的元数据库(用于记录binlog同步的断点位置等)和用户(用于maxwell登录mysql)
 	赋予maxwell用户对maxwell库中所有表的操作权限
 		grant all on maxwell.* to 'maxwell'@'%';
