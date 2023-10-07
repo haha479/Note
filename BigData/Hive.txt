@@ -60,10 +60,14 @@ metastore服务
 	修改con/hive-env.sh中参数export HADOOP_HEAPSIZE
 
 hive on spark
-	上传spark纯净的jar包目录至hdfs
+	上传spark纯净的jar包目录至hdfs(纯净的jar包是指不含hadoop依赖的spark安装包, 官网中可下载)
 		hdfs dfs -put spark/jars/* /spark/jars/  (/spark/jars/在hdfs中需要事先存在)
 
 	修改hive-site.xml文件
+
+	hive on spark和hive on MR的区别: 
+		前者是一个hive会话对应一个spark的job, 会话退出后, yarn上的资源就会释放.
+		后者是一个sql对应生成一个MR的job, 即一个MR程序.
 	
 DDL
 	创建数据库
@@ -85,3 +89,26 @@ DDL
 		cascade:级联模式,若数据库不为空,则将库中的表一并删除
 	切换当前数据库
 		use database_name
+
+复杂数据类型
+	array
+		1.定义
+			array<string>
+		2.取值
+			array[0]
+		3.构造
+			array(val1,val2,...)
+	map
+		1.定义
+			map<string,bigint>
+		2.取值
+			map[key]
+		3.构造
+			map(key1,value1,key2,value2,...),str_to_map(text)
+	struct
+		1.定义
+			struct<id:int,name:string>
+		2.取值
+			struct.id
+		3.构造
+			named_struct(name1,val1,name2,val2,...)
