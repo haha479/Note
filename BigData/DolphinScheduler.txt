@@ -1,0 +1,115 @@
+Apache DolphinScheduler是一个分布式、易扩展的可视化DAG工作流任务调度平台。
+致力于解决数据处理流程中错综复杂的依赖关系，使调度系统在数据处理流程中开箱即用。
+
+DolphinScheduler核心架构
+
+	MasterServer
+		采用分布式无中心(不分主次)设计理念，MasterServer主要负责DAG任务切分、任务提交(至WorkerServer)、任务监控，并同时监听其它MasterServer和WorkerServer的健康状态。
+	WorkerServer
+		也采用分布式无中心设计理念，WorkerServer主要负责任务的执行和提供日志服务。
+	ZooKeeper
+		系统中的MasterServer和WorkerServer节点都通过ZooKeeper来进行集群管理和容错。
+		如: 多个MasterServer监听数据库中的任务时, 因为各自不分主次, 
+		所以是谁先监听到任务谁就进行该任务下一步的任务切分等. 
+		一个MasterServer抢到任务时, 则会在Zookeeper注册节点, 其他MasterServer就不能在对该任务进行操作了.
+	Alert
+		提供告警相关服务。
+	API接口层
+		主要负责处理前端UI层的请求。
+	UI
+		系统的前端页面，提供系统的各种可视化操作界面。
+
+部署模式
+	1.单机模式
+		所有服务均集中于一个StandaloneServer进程中，并且其中内置了注册中心Zookeeper和数据库H2。
+		只需配置JDK环境，就可一键启动DolphinScheduler，快速体验其功能。
+	2.伪集群模式
+		伪集群模式（Pseudo-Cluster）是在单台机器部署 DolphinScheduler 各项服务，
+		该模式下master、worker、api server、logger server等服务都只在同一台机器上。Zookeeper和数据库需单独安装并进行相应配置。
+	3.集群模式
+		集群模式（Cluster）与伪集群模式的区别就是在多台机器部署 DolphinScheduler各项服务，并且可以配置多个Master及多个Worker。
+
+
+安装部署(集群模式, DS版本为1.3.9, 与2.0版本部署有部分差异)
+	1.所有节点部署JDK, ZooKeeper(3.4.6+)
+	2.所有节点安装进程管理工作包psmisc(yum安装即可)
+	3.一台节点安装mysql(存放DS元数据), 创建针对于DS的数据库与用户, 并赋予权限
+	4.解压DS软件包, 解压路径并非最终安装路径
+	5.修改配置解压包中/conf/datasource.properties文件(配置jdbc4个参数) 
+	6.拷贝mysql驱动到/lib/,mysql-connector-java-5.1.37.jar(注意版本)
+	7.初始化元数据库
+		/script/create-dolphinscheduler.sh
+	8.配置一键部署配置文件/conf/config/install_config.conf
+	9.启动ZooKeeper集群
+	10.执行一键部署脚本(注意:每个节点的普通用户需要支持sudo免密权限)
+		./install.sh
+
+UI界面
+	http://hadoop102:12345/dolphinscheduler(hadoop102为配置文件中设定的apiServer)
+	UI界面的初始用户名与密码：admin dolphinscheduler123
+
+UI界面中的各项管理
+	安全中心(只有管理员用户可操作)
+		租户管理
+			租户对应的是Linux的用户，用于worker提交作业所使用的用户。如果linux没有这个用户，则会导致任务运行失败。
+			可以通过修改 worker.properties 配置文件中参数 worker.tenant.auto.create=true（默认值为 false）实现当linux用户不存在时自动创建该用户(2.0版本可以配置, 1.3版本中直接创建用户)。
+			worker.tenant.auto.create=true参数会要求worker可以免密运行sudo命令
+
+			租户编码: 是Linux上的用户
+			租户名称: 在DS上显示的名称
+			队列: 该租户提交Yarn任务时的默认队列
+
+		用户管理
+			用户对应的是DolphinScheduler的用户，用于登录DolphinScheduler。用户分管理员用户和普通用户。
+			管理员有授权和用户管理等权限，没有创建项目和工作流定义的操作的权限。
+			普通用户可以创建项目和对工作流定义的创建，编辑，执行等操作。
+			注意：如果该用户切换了租户，则该用户所在租户下所有资源将复制到切换的新租户下。
+
+			用户名: DS登录账户
+			租户：该用户关联的租户
+			队列：默认为租户所关联的队列。
+			邮件、手机号：主要用于告警通知。
+
+		告警组管理
+			将多个用户归纳在一个组中, 在任务执行过程中若发生错误, 则以组为单位发送告警信息.
+			添加告警组后需要手动往组内添加用户.
+			
+		告警实例管理(2.0版本新增)
+			告警实例是用户配置的告警插件实例，目前支持钉钉、右键、飞书、Http、Script、Slack、企业微信告警插件.
+			配置的告警实例会出现在告警组创建时的“告警插件实例”下拉列表中
+
+		worker分组管理
+			在任务执行时，可以将任务分配给指定Worker组，最终由该组中的Worker节点执行该任务.
+			每个worker节点都会归属于自己的Worker分组，默认分组为default.
+			worker分组修改方式一: 
+				打开要设置分组的worker节点上的"conf/worker.properties"配置文件. 修改worker.groups参数。
+				worker.groups参数后面对应的为该worker节点对应的分组名称,默认为default。
+				如果该worker节点对应多个分组,则以逗号隔开
+
+			worker分组修改方式二: 
+				UI界面中修改, 优先级高于方式一(配置文件)
+
+
+		yarn队列管理
+			队列是在执行spark、mapreduce等程序，需要用到“队列”参数时使用的。
+			此处的队列对应的是Yarn调度器的资源队列。故队列概念只对跑在Yarn上的任务类型有效。
+			此处创建出的队列，可供后续任务进行选择。需要注意的是，在DolphinScheduler中创建队列，并不会影响到Yarn调度器的队列配置。
+
+			名称：DS 执行任务时可以选择的队列名称。
+			队列值：与名称相对应的 Yarn 调度队列的名称。
+
+
+		环境管理(2.0)
+			在线配置Worker运行环境，一个Worker可以指定多个环境，每个环境等价于dolphinscheduler_env.sh文件。
+			默认环境为dolphinscheduler_env.sh文件。
+			在任务执行时,可以将任务分配给指定worker分组，根据worker分组选择对应的环境，最终由该组中的worker节点执行环境后执行该任务
+
+
+		令牌管理
+			令牌用于通过接口访问DolphinScheduler各项服务时的用户验证。普通用户通过UI页面访问各项服务时，无需使用令牌。若需将DolphinScheduler与第三方服务进行集成，则需调用其接口，此时需使用令牌
+
+		授予权限(2.0)
+			授予权限包括项目权限，资源权限，数据源权限，UDF函数权限。
+			管理员可以对普通用户进行非其创建的项目、资源、数据源和UDF函数进行授权。因为项目、资源、数据源和UDF函数授权方式都是一样的，所以以项目授权为例介绍。
+			注意：对于用户自己创建的项目，该用户拥有所有的权限。则项目列表和已选项目列表中不会显示。
+	
