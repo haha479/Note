@@ -175,7 +175,8 @@ UDTF
 	inline(array<struct>):返回多行多列的表, 每列中的数据对应结构体中每个字段的值.
 
 	Lateral View(大多数情况结合UDTF函数使用)
-	lateral view首先为原始表的每行调用UDTF,UTDF会把一行拆分成一或者多行,lateral view再把结果组合,产生一个支持别名表的虚拟表
+	lateral view首先为原始表的每行调用UDTF函数,并且将每一行生成为多行(行数由UDTF函数炸裂的数组决定),多行之间不同的是新增的字段(该字段是UDTF炸裂的数组单个元素),
+	lateral view再把结果组合,产生一个支持别名表的虚拟表
 	select  (虚拟表tmp中字段)
 	from table lateral view explode(array) tmp as item
 	-- array为待炸裂的数组字段, tmp为虚拟表别名, item为炸裂之后新产生列的别名,若炸裂的字段类型为map则别名应该有两个, 用逗号分隔.
