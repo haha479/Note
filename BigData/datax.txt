@@ -5,6 +5,8 @@ DataX 实现了包括MySQL、Oracle、OceanBase、SqlServer、Postgre、HDFS、H
 	自检
 		python /opt/module/datax/bin/datax.py /opt/module/datax/job/job.json
 使用
+	用户需要根据自己同步数据的数据源和目的地选择相应的Reader和Writer, 
+	并将Reader和Writer的信息配置在一个json文件中, 然后执行以下命令提交数据同步任务即可.
 	datax运行任务的命令
 		python /bin/datax.py job.json
 		job.json的文件配置格式需要查看官方文档(github:https://github.com/alibaba/DataX/blob/master/README.md)，不同的数据源与目的地配置不同
