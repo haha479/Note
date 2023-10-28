@@ -43,6 +43,10 @@ DolphinScheduler核心架构
 	9.启动ZooKeeper集群
 	10.执行一键部署脚本(注意:每个节点的普通用户需要支持sudo免密权限)
 		./install.sh
+		执行部署脚本后, 所有配置过的DolphinScheduler服务将会自动开启
+
+服务的开启与关闭
+	bin/dolphinscheduler-daemon.sh start (master-server,worker-server,api-server,logger-server,alert-server)
 
 UI界面
 	http://hadoop102:12345/dolphinscheduler(hadoop102为配置文件中设定的apiServer)
@@ -112,4 +116,32 @@ UI界面中的各项管理
 			授予权限包括项目权限，资源权限，数据源权限，UDF函数权限。
 			管理员可以对普通用户进行非其创建的项目、资源、数据源和UDF函数进行授权。因为项目、资源、数据源和UDF函数授权方式都是一样的，所以以项目授权为例介绍。
 			注意：对于用户自己创建的项目，该用户拥有所有的权限。则项目列表和已选项目列表中不会显示。
+
+工作流传参
+	DolphinScheduler支持对任务节点进行灵活的传参，任务节点可通过${参数名}引用参数值
 	
+	内置参数
+		DolphinScheduler提供了一些时间相关的系统参数，方便定时调度使用
+		可定义多种日期格式的参数
+
+	全局参数
+		全局参数是指针对整个工作流的所有任务节点都有效的参数，在工作流定义页面配置
+
+引用依赖资源
+	有些任务需要引用一些额外的资源，例如MR、Spark等任务须引用jar包，Shell任务需要引用其他脚本等。
+	DolphinScheduler提供了资源中心来对这些资源进行统一管理
+
+	文件管理
+		文件管理是对各种资源文件的管理，包括创建基本的txt/log/sh/conf/py/java等文件、上传jar包等各种类型文件，可进行编辑、重命名、下载、删除等操作。底层存储的文件系统为配置文件中设置的文件系统名.
+
+邮箱告警
+	配置alert.properties文件, 配置发送邮件的地址, 该邮件需开启smtp服务(发送邮件所需)
+	启动工作流时, 选择收件人邮箱地址(收件人无需一定开启smtp服务)
+
+其他告警(微信, 手机等)
+	需要配合其他告警平台配置, 如睿象云
+
+DS运行任务时所使用的环境变量并非Linux中的环境变量, 而是DS自己维护的环境变量
+	位于: dolphinscheduler/conf/env/dolphinscheduler_env.sh
+	往该文件中需要添加的环境变量取决于任务所需的环境变量
+	2.0版本中可以在UI界面中编辑环境变量
