@@ -1,0 +1,73 @@
+Apache Superset是一个现代的数据探索(数据分析)和可视化平台
+
+Superset需要python3.7或以上环境支持
+
+安装部署
+
+	安装superset需要当前会话处于python3.7环境下, (一般创建类似沙盒的环境, 并进入该环境下安装)
+
+	安装miniconda(包含于Anaconda, 用其创建类似沙盒的环境)
+		下载并安装(按照提示输入)
+			官网中下载.sh结尾安装包
+			bash xxxxx.sh
+		加载环境变量配置文件
+			source ~/.bashrc
+		禁止激活默认base环境(新打开shell自动进入虚拟环境base)
+			conda config --set auto_activate_base false
+		配置conda国内镜像 
+			conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free
+			conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+			conda config --set show_channel_urls yes
+
+		创建python3.7环境并切入到该环境
+			conda create --name superset python=3.7
+			conda activate superset
+			说明:
+				创建环境：conda create -n env_name
+				查看所有环境：conda info --envs
+				删除一个环境：conda remove -n env_name --all
+				激活/切换环境: conda activate env_name
+				退出当前环境: conda deactivate
+
+	安装所需依赖
+		sudo yum install -y gcc gcc-c++ libffi-devel python-devel python-pip python-wheel python-setuptools openssl-devel cyrus-sasl-devel openldap-devel
+
+	更新setuptools和pip(使用国内的阿里镜像源)
+		pip install --upgrade setuptools pip -i https://mirrors.aliyun.com/pypi/simple/
+
+	安装Superset
+		pip install apache-superset -i https://mirrors.aliyun.com/pypi/simple/
+
+	初始化Superset数据库(默认使用的元数据库是sqlite, 这一步有非常多的坑, 大部分是superseet依赖包的版本问题, 具体看报错, 上网搜, 修改包的版本)
+		superset db upgrade
+		若报markupsafe包相关的错误, 考虑将该包的版本退回到2.0.1
+		报错flaskAPP相关的信息时先执行:export FLASK_APP=superset
+
+	创建管理员用户	
+		export FLASK_APP=superset
+		superset fab create-admin
+
+	Superset初始化
+		superset init
+
+	启动Superset
+		安装gunicorn
+			pip install gunicorn -i https://mirrors.aliyun.com/pypi/simple/
+		启动Superset
+			gunicorn --workers 5 --timeout 120 --bind hadoop102:8787  "superset.app:create_app()" --daemon
+			说明:	
+				workers：指定进程个数
+				timeout：worker进程超时时间，超时会自动重启
+				bind：绑定本机地址，即为Superset访问地址
+				daemon：后台运行
+
+	停止superset(强行杀死进程)
+		ps -ef | awk '/superset/ && !/awk/{print $2}' | xargs kill -9
+
+
+使用
+	对接mysql数据源需要安装对应依赖
+		conda install mysqlclient
+		重启
+			停止superset进程再使用gunicorn开启
+		
