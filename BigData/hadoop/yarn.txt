@@ -1,5 +1,10 @@
 yarn是一个资源调度平台, 负责为运算程序提供服务器运算资源.
 
+yarn架构中各大组件
+	ResourceManager:是yarn中最重要的组件，主要是接收客户端的作业，并且监控整个集群的资源使用状态
+	NodeManager:一个节点一个，负责与ResourceManager交互，监控当前节点容器的运行情况，返回当前节点的资源使用情况
+	Application Master:yarn只负责资源调度分配，不关心应用内部的执行。ApplicationMaster的作用就是管理具体的某个应用程序(如应用的提交，监控应用的运行状态)，为应用向ResourceManager申请资源
+	Container:对资源(cpu,内存)的抽象，在有作业提交时，yarn为作业预留的资源，封装在container中，应用都是在container中执行的。这样做到了每个应用之间资源隔离
 
 yarn的调度算法
 	FIFO:先进先出, 单个队列, 同时只能服务一个作业
