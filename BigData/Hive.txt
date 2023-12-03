@@ -180,3 +180,29 @@ UDTF
 	select  (虚拟表tmp中字段)
 	from table lateral view explode(array) tmp as item
 	-- array为待炸裂的数组字段, tmp为虚拟表别名, item为炸裂之后新产生列的别名,若炸裂的字段类型为map则别名应该有两个, 用逗号分隔.
+
+
+数据倾斜
+	数据倾斜是指参与计算的数据分布不均匀，即某个key或者某些key的数据量远超其他key，
+	导致在shuffle阶段，大量相同key的数据被发往同一个reduce，导致该reduce所需的时间远超其他reduce，成为整个任务的瓶颈。
+	解决办法
+		map-side聚合
+			在map端将数据进行分区预聚合，之后再将数据发往reduce端后(相同key的数据量变小了，在reduce端压力没那么大)，在reduce端聚合。
+			开启map-side
+				set hive.map.aggr=true;
+
+		Skew-GroupBy优化
+			Hive提供的专门解决由groupby导致的数据倾斜。
+			原来是启动两个MR任务，第一个MR按照随机数分区，将数据分散发送到Reduce，完成部分聚合，第二个MR按照分组字段分区，完成最终聚合。
+			开启Skew-GroupBy
+				set hive.groupby.skewindata=true;
+
+		map join
+			解决在hive中join操作中大表join小表导致的数据倾斜
+			hive默认使用的是common join，即在reduce端join，map join则是在map端join
+			原理：整个过程分为2个task，taskA将小表的数据写入本地的文件中，之后加载到内存中。
+			taskB是一个没有Reduce的MR，扫描大表的数据，在Map阶段，根据大表的每一条记录去和内存中的小表关联，直接输出结果。整个过程省去了shuffle和reduce操作。
+			开启map join
+				set hive.auto.convert.join=true;
+			设置表的大小多大时视为小表
+				set hive.mapjoin.smalltable.filesize=250000;
