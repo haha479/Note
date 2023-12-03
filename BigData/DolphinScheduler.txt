@@ -40,6 +40,7 @@ DolphinScheduler核心架构
 	7.初始化元数据库
 		/script/create-dolphinscheduler.sh
 	8.配置一键部署配置文件/conf/config/install_config.conf
+		若配置使用HDFS作为文件系统, 且为HA, 则需要将core-site.xml和hdfs-site.xml放入DS的conf目录下
 	9.启动ZooKeeper集群
 	10.执行一键部署脚本(注意:每个节点的普通用户需要支持sudo免密权限)
 		./install.sh
