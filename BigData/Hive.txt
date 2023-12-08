@@ -199,7 +199,14 @@ UDTF
 
 		map join
 			解决在hive中join操作中大表join小表导致的数据倾斜
-			hive默认使用的是common join，即在reduce端join，map join则是在map端join
+			hive默认使用的是common join，即在reduce端join，map join则是在map端join。
+			hive会自动判断是否满足map join，如果不满足map join，则自动执行reduce join。
+			map join的限制条件
+				1.left join 的左表必须是大表，right join的右表必须是大表，inner join的两边都可以是大表
+					full join不能使用map join
+				2.小表的大小必须要小于参数hive.mapjoin.smalltable.filesize的值.
+				3.mapjoin支持小表为子查询，使用mapjoin需要引用小表或者子查询时，需要引用别名.
+				4.多个表join时，最左边的两张表不能同时是mapjoin的表.
 			原理：整个过程分为2个task，taskA将小表的数据写入本地的文件中，之后加载到内存中。
 			taskB是一个没有Reduce的MR，扫描大表的数据，在Map阶段，根据大表的每一条记录去和内存中的小表关联，直接输出结果。整个过程省去了shuffle和reduce操作。
 			开启map join
