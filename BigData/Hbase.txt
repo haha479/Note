@@ -1,0 +1,26 @@
+HBase是以hdfs为数据存储的, 一种分布式、可扩展的NoSQL数据库.
+
+存储结构
+	按行拆分为Region(存储在不同节点), 即多个row_key对应一个Region.
+	按列族拆分为Store(存储在不同文件夹).
+	Store中每一个单元格使用key-value形式存储, key包含有row_key, 列族, 列限定符, 时间戳, 操作类型.value对应单元格中具体数据(相同row_key存储在同一个文件中).
+
+
+安装部署(集群模式)
+	1.确保hadoop组件处于运行状态, 开启zookeeper
+	2.解压Hbase安装包
+	3.集群配置环境变量
+	4.修改文件hbase-env.sh, hbase-site.xml, regionserver
+	5.解决HBase和Hadoop的log4j兼容性问题(删除指定jar包或者修改将jar包备份更名)
+	6.启动Hbase服务
+		start-hbase.sh
+	7.查看HBase的web管理页面
+		hadoop102:16010
+
+配置高可用
+	1.创建文件conf/backup-masters, 写入备用Hmaster节点地址
+	2.分发backup-masters文件
+	3.重新启动hbase集群
+
+
+	
